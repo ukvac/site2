@@ -79,6 +79,44 @@
     </p>
 
     <div class="actions">
+
+      <!-- Session recording notice (GOV.UK-ish panel) -->
+      <div class="recording-panel" role="note" aria-label="Session recording notice">
+        <div class="recording-panel__badge">
+          <span class="recording-badge" aria-hidden="true">SESSION</span>
+          <span class="recording-panel__title">Session recording enabled</span>
+        </div>
+        <p class="recording-panel__text">
+          This session may be recorded for safeguarding, quality assurance and compliance purposes.
+        </p>
+      </div>
+
+      <!-- Recording controls -->
+      <div class="recording-controls" aria-label="Recording controls">
+        <button
+          type="button"
+          id="recToggle"
+          class="rec-toggle"
+          aria-pressed="true"
+          aria-label="Stop recording"
+        >
+          <span class="rec-dot" aria-hidden="true">
+            <!-- Mic icon (inline SVG) -->
+            <svg class="rec-mic" viewBox="0 0 24 24" role="img" aria-label="Microphone icon">
+              <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 0-2 0 3 3 0 0 1-6 0 1 1 0 1 0-2 0 5 5 0 0 0 4 4.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1A5 5 0 0 0 17 11Z"/>
+            </svg>
+          </span>
+          <span class="rec-toggle__text" id="recToggleText">Stop recording</span>
+        </button>
+
+        <div class="rec-status" aria-live="polite">
+          <span class="rec-status__label" id="recStatusLabel">Recording</span>
+          <span class="rec-status__sep" aria-hidden="true">•</span>
+          <span class="rec-timer" id="recTimer">00:00</span>
+        </div>
+      </div>
+
+      <!-- Continue button -->
       <a
         class="button"
         href="https://forms.gle/AgHxhTS3jQMm49UM6"
@@ -115,5 +153,79 @@
   </footer>
 
   <script type="text/javascript" src="js/script.js"></script>
+
+  <!-- Recording UI logic (toggle + timer) -->
+  <script>
+    (function () {
+      const btn = document.getElementById("recToggle");
+      const btnText = document.getElementById("recToggleText");
+      const statusLabel = document.getElementById("recStatusLabel");
+      const timerEl = document.getElementById("recTimer");
+
+      let isRecording = true;   // default: active
+      let startTime = Date.now();
+      let elapsedMs = 0;
+      let intervalId = null;
+
+      function pad2(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function formatTime(ms) {
+        const totalSec = Math.floor(ms / 1000);
+        const mm = Math.floor(totalSec / 60);
+        const ss = totalSec % 60;
+        return pad2(mm) + ":" + pad2(ss);
+      }
+
+      function render() {
+        timerEl.textContent = formatTime(elapsedMs);
+      }
+
+      function tick() {
+        elapsedMs = Date.now() - startTime;
+        render();
+      }
+
+      function start() {
+        isRecording = true;
+        btn.classList.remove("rec-toggle--off");
+        btn.setAttribute("aria-pressed", "true");
+        btn.setAttribute("aria-label", "Stop recording");
+        btnText.textContent = "Stop recording";
+        statusLabel.textContent = "Recording";
+
+        startTime = Date.now() - elapsedMs; // resume from elapsed
+        intervalId = setInterval(tick, 250);
+      }
+
+      function stop() {
+        isRecording = false;
+        btn.classList.add("rec-toggle--off");
+        btn.setAttribute("aria-pressed", "false");
+        btn.setAttribute("aria-label", "Start recording");
+        btnText.textContent = "Start recording";
+        statusLabel.textContent = "Not recording";
+
+        if (intervalId) clearInterval(intervalId);
+        intervalId = null;
+        render();
+      }
+
+      // Init timer running
+      intervalId = setInterval(tick, 250);
+
+      btn.addEventListener("click", function () {
+        if (isRecording) {
+          stop();
+        } else {
+          start();
+        }
+      });
+
+      // initial paint
+      render();
+    })();
+  </script>
 </body>
 </html>
