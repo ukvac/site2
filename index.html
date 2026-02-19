@@ -3,20 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UKVI Skilled Worker Monitoring</title>
+  <title>Supervision Recording Portal</title>
 
   <link rel="stylesheet" href="style.css" />
-  <link type="text/css" rel="stylesheet" href="css/style.css"/>
 </head>
 
 <body>
-  <!-- Top header bar (GOV.UK-like, but YOUR branding) -->
+  <!-- Top header bar (serious, government-style layout without GOV.UK branding) -->
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
-        <span class="app-header__brand">GOV.UK</span>
+        <span class="app-header__brand">Compliance Portal</span>
       </div>
-      <div class="app-header__center">Visas and Immigration</div>
+      <div class="app-header__center">Supervision Recording</div>
       <div class="app-header__right">Worker- <strong>Archabahen Shaileshbhai Patel</strong></div>
     </div>
   </header>
@@ -25,10 +24,10 @@
     <!-- Phase banner -->
     <div class="phase-banner" aria-label="Service status">
       <strong class="phase-banner__tag">BETA</strong>
-      <span class="phase-banner__text">This is a new service.</span>
+      <span class="phase-banner__text">This is an internal training/demo service.</span>
     </div>
 
-    <!-- Service name banner (replaces step navigation) -->
+    <!-- Service name banner -->
     <section class="service-name" aria-label="Service name">
       <div class="service-name__box">
         <strong class="service-name__text">Skilled Worker Supervision Recording</strong>
@@ -40,22 +39,30 @@
       <a class="back-link" href="#" onclick="history.back(); return false;">Back</a>
     </p>
 
-    <h1>Your Supervision will be recorded live and submitted to the UKVI.</h1>
+    <h1>Supervision session (recording optional).</h1>
+    <h2 class="section-heading">This is a live session.</h2>
 
-    <h2 class="section-heading">This is a LIVE Service.</h2>
-
-    <!-- Amount summary (like GOV.UK table-ish style) -->
-    <div class="summary">
+    <!-- Summary block -->
+    <div class="summary" role="region" aria-label="Supervision summary">
       <div class="summary__row">
-        <div class="summary__key">Archabahen Shaileshbhai Patel - Skilled Worker</div>
-        <div class="summary__value">Archabahen Shaileshbhai Patel  Health & Care Worker Supervision. To be submitted by 28 February 2026.</div>
+        <div class="summary__key">Worker</div>
+        <div class="summary__value">Archabahen Shaileshbhai Patel - Skilled Worker</div>
+      </div>
+
+      <div class="summary__divider" role="presentation"></div>
+
+      <div class="summary__row">
+        <div class="summary__key">Session</div>
+        <div class="summary__value">Health &amp; Care Worker Supervision. Target submission date: 28 February 2026.</div>
       </div>
 
       <div class="summary__divider" role="presentation"></div>
 
       <div class="summary__row summary__row--total">
-        <div class="summary__key">This Supervision meeting will be recorded live and submitted once completed. Please check your microphone and webcam settings. The camera feed should clearly show the management SMS Level 1 Figure and the Skilled Worker.</div>
-        <div class="summary__value"></div>
+        <div class="summary__key">Reminder</div>
+        <div class="summary__value">
+          Please check your microphone and camera settings. The camera feed should clearly show both the supervisor and the worker.
+        </div>
       </div>
     </div>
 
@@ -65,29 +72,63 @@
       <div class="warning__content">
         <h3 class="warning__title">Before you continue</h3>
         <p class="warning__text">
-          Please note, This meeting is shared on a live platform with the Care Quality Commision and third party authorities concerned.
-          We require full and proper responses from the Sponsored Worker, Short answers will not be accepted.
+          This meeting is conducted for internal compliance, safeguarding and quality assurance purposes.
+          We require full and proper responses from the worker. Short answers may require follow-up questions.
         </p>
         <p class="warning__text">
-          Once you select ‘Submit Supervision’ you will not be able to return and edit your Supervision meeting.
+          Once you select ‘Submit supervision’ you may not be able to return and edit this session record.
         </p>
       </div>
     </div>
 
+    <!-- LIVE Questions (one-by-one) -->
+    <section class="qa" aria-label="Live supervision questions">
+      <div class="qa__header">
+        <h3 class="qa__title">Compliance supervision and welfare questions (live)</h3>
+        <p class="qa__subtitle">
+          Questions appear one at a time during the session. Answer clearly and provide examples where possible.
+        </p>
+      </div>
+
+      <div class="qa__body">
+        <div class="qa__meta" aria-live="polite">
+          <span class="qa__count" id="qaCount">Question 1 of 10</span>
+          <span class="qa__live" aria-hidden="true">LIVE</span>
+        </div>
+
+        <div class="qa__card" role="group" aria-label="Current question">
+          <div class="qa__q" id="qaQuestion">Loading question…</div>
+          <div class="qa__hint" id="qaHint"></div>
+        </div>
+
+        <div class="qa__controls" aria-label="Question navigation">
+          <button type="button" class="qa-btn" id="qaPrev" aria-label="Previous question">Previous</button>
+          <button type="button" class="qa-btn qa-btn--primary" id="qaNext" aria-label="Next question">Next question</button>
+        </div>
+
+        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1">
+          <div class="qa__progress-bar" id="qaProgressBar" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <div class="qa__footer" role="note">
+        <strong>Tip:</strong> If you do not know an answer, say so and explain how you would find out.
+      </div>
+    </section>
+
     <p class="body-text">
-      Continue to the secure portal to upload your staff supervision. You will not have access to this meeting as the employer.
+      Continue to the secure portal to complete your staff supervision record. Access may be restricted depending on user permissions.
     </p>
 
     <div class="actions">
-
-      <!-- Session recording notice (GOV.UK-ish panel) -->
+      <!-- Session recording notice -->
       <div class="recording-panel" role="note" aria-label="Session recording notice">
         <div class="recording-panel__badge">
           <span class="recording-badge" aria-hidden="true">SESSION</span>
-          <span class="recording-panel__title">Session recording enabled</span>
+          <span class="recording-panel__title">Session recording control</span>
         </div>
         <p class="recording-panel__text">
-          This session will be recorded for safeguarding, quality assurance and compliance purposes.
+          Recording does not begin automatically. Select “Start recording” when ready.
         </p>
       </div>
 
@@ -96,9 +137,9 @@
         <button
           type="button"
           id="recToggle"
-          class="rec-toggle"
-          aria-pressed="true"
-          aria-label="Stop recording"
+          class="rec-toggle rec-toggle--off"
+          aria-pressed="false"
+          aria-label="Start recording"
         >
           <span class="rec-dot" aria-hidden="true">
             <!-- Mic icon (inline SVG) -->
@@ -106,24 +147,40 @@
               <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 0-2 0 3 3 0 0 1-6 0 1 1 0 1 0-2 0 5 5 0 0 0 4 4.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1A5 5 0 0 0 17 11Z"/>
             </svg>
           </span>
-          <span class="rec-toggle__text" id="recToggleText">Stop recording</span>
+          <span class="rec-toggle__text" id="recToggleText">Start recording</span>
         </button>
 
         <div class="rec-status" aria-live="polite">
-          <span class="rec-status__label" id="recStatusLabel">Recording</span>
+          <span class="rec-status__label" id="recStatusLabel">Not recording</span>
           <span class="rec-status__sep" aria-hidden="true">•</span>
           <span class="rec-timer" id="recTimer">00:00</span>
         </div>
       </div>
 
-      <!-- Continue button -->
+      <!-- Consent -->
+      <div class="consent" role="group" aria-label="Consent">
+        <label class="consent__label">
+          <input type="checkbox" id="consentCheck" class="consent__checkbox" />
+          <span class="consent__text">
+            I confirm I have informed all participants that this session may be recorded for internal compliance, safeguarding and quality purposes,
+            and I have the required permission to proceed.
+          </span>
+        </label>
+        <p class="consent__hint" id="consentHint">
+          You must confirm consent before you can submit the supervision record.
+        </p>
+      </div>
+
+      <!-- Submit button (disabled until consent is ticked) -->
       <a
-        class="button"
+        class="button button--disabled"
+        id="submitBtn"
         href="https://www.gov.uk/government/publications/workers-and-temporary-workers-guidance-for-sponsors-part-2-sponsor-a-worker/workers-and-temporary-workers-guidance-for-sponsors-part-2-sponsor-a-worker-general-information-accessible"
         target="_blank"
         rel="noopener noreferrer"
+        aria-disabled="true"
       >
-        Submit Supervision
+        Submit supervision
       </a>
     </div>
 
@@ -146,24 +203,24 @@
 
       <div class="app-footer__meta">
         <p class="app-footer__note">
-          © All content is available under the Open Government Licence v3.0, except where otherwise stated
+          Internal training/demo interface. Do not present this page as an official government service.
         </p>
       </div>
     </div>
   </footer>
 
-  <script type="text/javascript" src="js/script.js"></script>
-
-  <!-- Recording UI logic (toggle + timer) -->
   <script>
     (function () {
+      // ---------------------------
+      // Recording UI (starts OFF)
+      // ---------------------------
       const btn = document.getElementById("recToggle");
       const btnText = document.getElementById("recToggleText");
       const statusLabel = document.getElementById("recStatusLabel");
       const timerEl = document.getElementById("recTimer");
 
-      let isRecording = true;   // default: active
-      let startTime = Date.now();
+      let isRecording = false;
+      let startTime = 0;
       let elapsedMs = 0;
       let intervalId = null;
 
@@ -178,16 +235,16 @@
         return pad2(mm) + ":" + pad2(ss);
       }
 
-      function render() {
+      function renderTimer() {
         timerEl.textContent = formatTime(elapsedMs);
       }
 
       function tick() {
         elapsedMs = Date.now() - startTime;
-        render();
+        renderTimer();
       }
 
-      function start() {
+      function startRec() {
         isRecording = true;
         btn.classList.remove("rec-toggle--off");
         btn.setAttribute("aria-pressed", "true");
@@ -195,11 +252,11 @@
         btnText.textContent = "Stop recording";
         statusLabel.textContent = "Recording";
 
-        startTime = Date.now() - elapsedMs; // resume from elapsed
-        intervalId = setInterval(tick, 250);
+        startTime = Date.now() - elapsedMs;
+        if (!intervalId) intervalId = setInterval(tick, 250);
       }
 
-      function stop() {
+      function stopRec() {
         isRecording = false;
         btn.classList.add("rec-toggle--off");
         btn.setAttribute("aria-pressed", "false");
@@ -209,22 +266,159 @@
 
         if (intervalId) clearInterval(intervalId);
         intervalId = null;
-        render();
+        renderTimer();
       }
 
-      // Init timer running
-      intervalId = setInterval(tick, 250);
-
       btn.addEventListener("click", function () {
-        if (isRecording) {
-          stop();
+        if (isRecording) stopRec();
+        else startRec();
+      });
+
+      renderTimer(); // initial paint
+      stopRec();     // enforce off state
+
+
+      // ---------------------------
+      // Consent gating (enables submit)
+      // ---------------------------
+      const consentCheck = document.getElementById("consentCheck");
+      const submitBtn = document.getElementById("submitBtn");
+      const consentHint = document.getElementById("consentHint");
+
+      function setSubmitEnabled(enabled) {
+        if (enabled) {
+          submitBtn.classList.remove("button--disabled");
+          submitBtn.setAttribute("aria-disabled", "false");
+          consentHint.textContent = "Consent confirmed. You can now submit.";
         } else {
-          start();
+          submitBtn.classList.add("button--disabled");
+          submitBtn.setAttribute("aria-disabled", "true");
+          consentHint.textContent = "You must confirm consent before you can submit the supervision record.";
+        }
+      }
+
+      consentCheck.addEventListener("change", function () {
+        setSubmitEnabled(consentCheck.checked);
+      });
+
+      // Prevent click when disabled (anchor can't truly disable)
+      submitBtn.addEventListener("click", function (e) {
+        if (submitBtn.getAttribute("aria-disabled") === "true") {
+          e.preventDefault();
+          consentHint.focus?.();
         }
       });
 
-      // initial paint
-      render();
+      setSubmitEnabled(false);
+
+
+      // ---------------------------
+      // LIVE Questions (one-by-one)
+      // ---------------------------
+      const questions = [
+        {
+          q: "Confirm your job title and main duties in your own words.",
+          hint: "Include typical tasks you do each week."
+        },
+        {
+          q: "Who is your line manager and how often do you receive supervision?",
+          hint: "State the last supervision date if you can."
+        },
+        {
+          q: "What are your normal working hours and where do you usually work from?",
+          hint: "Include any regular changes (e.g., rota patterns)."
+        },
+        {
+          q: "Explain your current rota: how is it issued and how do you confirm shifts?",
+          hint: "Mention the system/app used (if any)."
+        },
+        {
+          q: "Describe how you record visit notes and report incidents or safeguarding concerns.",
+          hint: "Give one example of a situation and what you did."
+        },
+        {
+          q: "What training have you completed in the last 3 months?",
+          hint: "E.g., moving & handling, medication, safeguarding, infection control."
+        },
+        {
+          q: "If you were unsure about a care task, what steps would you take before proceeding?",
+          hint: "Focus on escalation and safe practice."
+        },
+        {
+          q: "Do you have any health, wellbeing, or workload concerns you want to raise today?",
+          hint: "This can include stress, fatigue, or support needs."
+        },
+        {
+          q: "Confirm you understand your obligation to notify your employer about changes to contact details or availability.",
+          hint: "Explain what you would do if your circumstances change."
+        },
+        {
+          q: "Is there anything preventing you from meeting the required standard of communication in your role?",
+          hint: "If yes, describe what support would help."
+        }
+      ];
+
+      const qaCount = document.getElementById("qaCount");
+      const qaQuestion = document.getElementById("qaQuestion");
+      const qaHint = document.getElementById("qaHint");
+      const qaPrev = document.getElementById("qaPrev");
+      const qaNext = document.getElementById("qaNext");
+      const qaProgressBar = document.getElementById("qaProgressBar");
+      const qaProgress = document.querySelector(".qa__progress");
+
+      let idx = 0;
+
+      function renderQuestion() {
+        const total = questions.length;
+        const current = idx + 1;
+
+        qaCount.textContent = `Question ${current} of ${total}`;
+        qaQuestion.textContent = questions[idx].q;
+        qaHint.textContent = questions[idx].hint || "";
+
+        // Buttons
+        qaPrev.disabled = idx === 0;
+        qaPrev.classList.toggle("qa-btn--disabled", idx === 0);
+
+        const isLast = idx === total - 1;
+        qaNext.textContent = isLast ? "Finish" : "Next question";
+        qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
+
+        // Progressbar
+        const pct = Math.round((current / total) * 100);
+        qaProgressBar.style.width = pct + "%";
+        qaProgress.setAttribute("aria-valuemin", "1");
+        qaProgress.setAttribute("aria-valuemax", String(total));
+        qaProgress.setAttribute("aria-valuenow", String(current));
+      }
+
+      qaPrev.addEventListener("click", function () {
+        if (idx > 0) {
+          idx--;
+          renderQuestion();
+        }
+      });
+
+      qaNext.addEventListener("click", function () {
+        if (idx < questions.length - 1) {
+          idx++;
+          renderQuestion();
+        } else {
+          // Finish state
+          qaQuestion.textContent = "Questions completed.";
+          qaHint.textContent = "You may review responses and proceed when ready.";
+          qaCount.textContent = `Completed (${questions.length} questions)`;
+          qaPrev.disabled = false;
+          qaPrev.classList.remove("qa-btn--disabled");
+          qaNext.disabled = true;
+          qaNext.classList.add("qa-btn--disabled");
+          qaNext.textContent = "Finished";
+          qaProgressBar.style.width = "100%";
+          qaProgress.setAttribute("aria-valuenow", String(questions.length));
+        }
+      });
+
+      renderQuestion();
     })();
   </script>
 </body>
