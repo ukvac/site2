@@ -9,7 +9,6 @@
 </head>
 
 <body>
-  <!-- Top header bar (serious, government-style layout without GOV.UK branding) -->
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
@@ -21,20 +20,17 @@
   </header>
 
   <main class="container" role="main">
-    <!-- Phase banner -->
     <div class="phase-banner" aria-label="Service status">
       <strong class="phase-banner__tag">BETA</strong>
       <span class="phase-banner__text">This is a new service.</span>
     </div>
 
-    <!-- Service name banner -->
     <section class="service-name" aria-label="Service name">
       <div class="service-name__box">
         <strong class="service-name__text">Skilled Worker Supervision Recording</strong>
       </div>
     </section>
 
-    <!-- Back link -->
     <p class="back-link-wrap">
       <a class="back-link" href="#" onclick="history.back(); return false;">Back</a>
     </p>
@@ -42,7 +38,6 @@
     <h1>Supervision session (recording optional).</h1>
     <h2 class="section-heading">This is a live session.</h2>
 
-    <!-- Summary block -->
     <div class="summary" role="region" aria-label="Supervision summary">
       <div class="summary__row">
         <div class="summary__key">Worker</div>
@@ -66,7 +61,6 @@
       </div>
     </div>
 
-    <!-- Warning box -->
     <div class="warning" role="note" aria-label="Before you continue">
       <div class="warning__icon" aria-hidden="true">!</div>
       <div class="warning__content">
@@ -81,7 +75,7 @@
       </div>
     </div>
 
-    <!-- LIVE Questions (one-by-one) -->
+    <!-- LIVE Questions (hidden until recording starts) -->
     <section class="qa" aria-label="Live supervision questions">
       <div class="qa__header">
         <h3 class="qa__title">Compliance supervision and welfare questions (live)</h3>
@@ -92,19 +86,32 @@
 
       <div class="qa__body">
         <div class="qa__meta" aria-live="polite">
-          <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
-          <span class="qa__number" id="qaNumber">Question 1</span>
+          <div class="qa__metaRow">
+            <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
+
+            <!-- LIVE badge appears only when recording is ON -->
+            <span class="qa__liveBadge" id="qaLiveBadge" aria-label="Live">
+              <span class="qa__liveDot" aria-hidden="true"></span>
+              LIVE
+            </span>
+          </div>
+
+          <!-- Number + status text -->
+          <div class="qa__metaRow qa__metaRow--secondary">
+            <span class="qa__number" id="qaNumber">Questions will appear after recording has started.</span>
+          </div>
         </div>
 
-        <div class="qa__card" role="group" aria-label="Current question">
-          <div class="qa__q" id="qaQuestion">Loading question…</div>
+        <!-- Question card (hidden until recording starts) -->
+        <div class="qa__card qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
+          <div class="qa__q" id="qaQuestion"></div>
           <div class="qa__hint" id="qaHint"></div>
         </div>
 
         <div class="qa__controls" aria-label="Question navigation">
           <button
             type="button"
-            class="qa-btn qa-btn--primary"
+            class="qa-btn"
             id="qaNext"
             aria-label="Next question"
             disabled
@@ -113,12 +120,12 @@
           </button>
         </div>
 
-        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1">
+        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <div class="qa__progress-bar" id="qaProgressBar" style="width: 0%;"></div>
         </div>
 
         <p class="qa__lockNote" id="qaLockNote">
-          You must start recording before you can continue to the next question.
+          You must start recording before questions are shown.
         </p>
       </div>
 
@@ -128,11 +135,10 @@
     </section>
 
     <p class="body-text body-text--subtle">
-      This Supervision recording is shared with the UKVI and the Care Quality Commision (CQC).
+      This recording will be shared with the UKVI and the CQC Care Quality Commission..
     </p>
 
     <div class="actions">
-      <!-- Session recording notice -->
       <div class="recording-panel" role="note" aria-label="Session recording notice">
         <div class="recording-panel__badge">
           <span class="recording-badge" aria-hidden="true">SESSION</span>
@@ -143,7 +149,6 @@
         </p>
       </div>
 
-      <!-- Recording controls -->
       <div class="recording-controls" aria-label="Recording controls">
         <button
           type="button"
@@ -153,7 +158,6 @@
           aria-label="Start recording"
         >
           <span class="rec-dot" aria-hidden="true">
-            <!-- Mic icon (inline SVG) -->
             <svg class="rec-mic" viewBox="0 0 24 24" role="img" aria-label="Microphone icon">
               <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 0-2 0 3 3 0 0 1-6 0 1 1 0 1 0-2 0 5 5 0 0 0 4 4.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1A5 5 0 0 0 17 11Z"/>
             </svg>
@@ -168,7 +172,6 @@
         </div>
       </div>
 
-      <!-- Consent -->
       <div class="consent" role="group" aria-label="Consent">
         <label class="consent__label">
           <input type="checkbox" id="consentCheck" class="consent__checkbox" />
@@ -182,7 +185,6 @@
         </p>
       </div>
 
-      <!-- Submit button (disabled until consent + recording started) -->
       <a
         class="button button--disabled"
         id="submitBtn"
@@ -201,7 +203,6 @@
     </ul>
   </main>
 
-  <!-- Footer -->
   <footer class="app-footer" role="contentinfo">
     <div class="container app-footer__inner">
       <div class="app-footer__links">
@@ -214,7 +215,7 @@
 
       <div class="app-footer__meta">
         <p class="app-footer__note">
-          Internal training/demo interface. Do not present this page as an official government service.
+          All content is available under the Open Government Licence v3.0, except where otherwise stated.
         </p>
       </div>
     </div>
@@ -241,6 +242,8 @@
       const qaProgressBar = document.getElementById("qaProgressBar");
       const qaProgress = document.querySelector(".qa__progress");
       const qaLockNote = document.getElementById("qaLockNote");
+      const qaCard = document.getElementById("qaCard");
+      const qaLiveBadge = document.getElementById("qaLiveBadge");
 
       // ---------------------------
       // State
@@ -260,9 +263,7 @@
         const ss = totalSec % 60;
         return pad2(mm) + ":" + pad2(ss);
       }
-      function renderTimer() {
-        timerEl.textContent = formatTime(elapsedMs);
-      }
+      function renderTimer() { timerEl.textContent = formatTime(elapsedMs); }
 
       // Submit gating: requires consent + recording
       function updateSubmitState() {
@@ -285,10 +286,28 @@
         }
       }
 
-      // Questions gating: Next enabled only when recording
-      function updateQuestionNavState() {
-        qaNext.disabled = !isRecording;
-        qaLockNote.style.display = isRecording ? "none" : "block";
+      // Questions gating: visible only when recording
+      function setQuestionsVisible(visible) {
+        if (visible) {
+          qaCard.classList.remove("qa__card--hidden");
+          qaNext.disabled = false;
+          qaLockNote.style.display = "none";
+          qaLiveBadge.style.display = "inline-flex";
+        } else {
+          qaCard.classList.add("qa__card--hidden");
+          qaNext.disabled = true;
+          qaLockNote.style.display = "block";
+          qaLiveBadge.style.display = "none";
+
+          // Reset meta text to initial placeholder
+          qaNumber.textContent = "Questions will appear after recording has started.";
+          qaQuestion.textContent = "";
+          qaHint.textContent = "";
+
+          // Reset progress
+          qaProgressBar.style.width = "0%";
+          qaProgress.setAttribute("aria-valuenow", "0");
+        }
       }
 
       // ---------------------------
@@ -310,7 +329,11 @@
         startTime = Date.now() - elapsedMs;
         if (!intervalId) intervalId = setInterval(tick, 250);
 
-        updateQuestionNavState();
+        // Show questions + render first question
+        idx = 0;
+        renderQuestion();
+        setQuestionsVisible(true);
+
         updateSubmitState();
       }
 
@@ -326,7 +349,9 @@
         intervalId = null;
         renderTimer();
 
-        updateQuestionNavState();
+        // Hide questions when recording stops
+        setQuestionsVisible(false);
+
         updateSubmitState();
       }
 
@@ -346,39 +371,52 @@
 
       // Initial paint
       renderTimer();
-      stopRec(); // enforces off state + disables Next + submit
+      stopRec(); // enforces OFF state + hides questions + disables submit
+
 
       // ---------------------------
-      // LIVE Questions (one-by-one) — deduped + added your questions
+      // LIVE Questions (one-by-one) — expanded list (no duplicates)
       // ---------------------------
       const questions = [
-        { q: "Are you comfortable working for the sponsored company?", hint: "" },
-        { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
+        // Role / duties / supervision
         { q: "Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
+        { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
         { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
-        { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns." },
-        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
+        { q: "How do you receive your rota and how do you confirm shifts?", hint: "Mention the method or system used." },
+        { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns and locations." },
         { q: "Are you aware that you must make yourself available to work your allocated hours on a weekly basis?", hint: "" },
+        { q: "Do you get breaks in between your given hours?", hint: "Describe typical breaks." },
 
+        // Secondary employment / restrictions
         { q: "Are you working anywhere else?", hint: "Answer clearly." },
         { q: "Have you worked on any other projects other than with the sponsored company?", hint: "" },
         { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "" },
+        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
 
+        // Pay / tax / cash-in-hand
         { q: "What is the current rate at which you are being paid?", hint: "State hourly rate/salary and how often you are paid." },
+        { q: "Do you receive payslips and can you confirm how you are paid?", hint: "E.g., bank transfer; frequency; payslip access." },
         { q: "Are you being responsible in paying your taxes?", hint: "Answer truthfully." },
         { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
 
+        // Welfare / modern slavery / fairness
+        { q: "Are you comfortable working for the sponsored company?", hint: "" },
         { q: "Are you aware of the concept of modern slavery?", hint: "" },
         { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
         { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "" },
+        { q: "Do you feel safe at work and supported by management?", hint: "If no, explain what support you need." },
 
+        // Team / conduct
         { q: "How do you get on with your co-workers?", hint: "" },
         { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
-        { q: "Do you get breaks in between your given hours?", hint: "Describe typical breaks." },
+        { q: "Have you ever raised a concern formally (e.g., grievance or incident report)?", hint: "If yes, explain the outcome." },
 
+        // Practice / safeguarding / training
         { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
         { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
+
+        // Wellbeing
         { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." }
       ];
 
@@ -395,11 +433,11 @@
         // Progress
         const pct = Math.round((current / total) * 100);
         qaProgressBar.style.width = pct + "%";
-        qaProgress.setAttribute("aria-valuemin", "1");
-        qaProgress.setAttribute("aria-valuemax", String(total));
-        qaProgress.setAttribute("aria-valuenow", String(current));
+        qaProgress.setAttribute("aria-valuemin", "0");
+        qaProgress.setAttribute("aria-valuemax", "100");
+        qaProgress.setAttribute("aria-valuenow", String(pct));
 
-        // Next text changes at end
+        // Next label
         const isLast = idx === total - 1;
         qaNext.textContent = isLast ? "Finish questions" : "Next question";
         qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
@@ -412,18 +450,18 @@
           idx++;
           renderQuestion();
         } else {
-          // finish state
           qaNumber.textContent = "Completed";
-          qaQuestion.textContent = "Questions completed. - You may proceed with your Employer supervision. Do not stop the recording.";
+          qaQuestion.textContent = "Questions completed.";
           qaHint.textContent = "You may proceed when ready.";
           qaNext.disabled = true;
           qaNext.textContent = "Finished";
           qaProgressBar.style.width = "100%";
+          qaProgress.setAttribute("aria-valuenow", "100");
         }
       });
 
-      renderQuestion();
-      updateQuestionNavState();
+      // Start hidden until recording starts
+      setQuestionsVisible(false);
     })();
   </script>
 </body>
