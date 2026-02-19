@@ -12,7 +12,7 @@
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
-        <span class="app-header__brand">GOV.UK Compliance Portal</span>
+        <span class="app-header__brand">Compliance Portal</span>
       </div>
       <div class="app-header__center">Supervision Recording</div>
       <div class="app-header__right">Worker- <strong>Archabahen Shaileshbhai Patel</strong></div>
@@ -75,58 +75,77 @@
       </div>
     </div>
 
-    <!-- LIVE Questions (hidden until recording starts) -->
+    <!-- LIVE Questions + Webcam (hidden until recording starts) -->
     <section class="qa" aria-label="Live supervision questions">
       <div class="qa__header">
         <h3 class="qa__title">Compliance supervision and welfare questions (live)</h3>
         <p class="qa__subtitle">
-          Questions appear one at a time during the session. Answer clearly and provide examples where possible. The person conducting this meeting should ask the questions verbally.
+          Questions appear one at a time during the session. Answer clearly and provide examples where possible.
+          The person conducting this meeting should ask the questions verbally.
         </p>
       </div>
 
-      <div class="qa__body">
-        <div class="qa__meta" aria-live="polite">
-          <div class="qa__metaRow">
-            <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
+      <div class="qa__body qa__layout">
+        <!-- LEFT: questions -->
+        <div class="qa__left">
+          <div class="qa__meta" aria-live="polite">
+            <div class="qa__metaRow">
+              <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
 
-            <!-- LIVE badge appears only when recording is ON -->
-            <span class="qa__liveBadge" id="qaLiveBadge" aria-label="Live">
-              <span class="qa__liveDot" aria-hidden="true"></span>
-              LIVE
-            </span>
+              <!-- LIVE badge appears only when recording is ON -->
+              <span class="qa__liveBadge" id="qaLiveBadge" aria-label="Live">
+                <span class="qa__liveDot" aria-hidden="true"></span>
+                LIVE
+              </span>
+            </div>
+
+            <div class="qa__metaRow qa__metaRow--secondary">
+              <span class="qa__number" id="qaNumber">Questions will appear after recording has started.</span>
+            </div>
           </div>
 
-          <!-- Number + status text -->
-          <div class="qa__metaRow qa__metaRow--secondary">
-            <span class="qa__number" id="qaNumber">Questions will appear after recording has started.</span>
+          <!-- Question card (hidden until recording starts) -->
+          <div class="qa__card qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
+            <div class="qa__q" id="qaQuestion"></div>
+            <div class="qa__hint" id="qaHint"></div>
           </div>
+
+          <div class="qa__controls" aria-label="Question navigation">
+            <button
+              type="button"
+              class="qa-btn"
+              id="qaNext"
+              aria-label="Next question"
+              disabled
+            >
+              Next question
+            </button>
+          </div>
+
+          <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="qa__progress-bar" id="qaProgressBar" style="width: 0%;"></div>
+          </div>
+
+          <p class="qa__lockNote" id="qaLockNote">
+            You must start recording before questions are shown.
+          </p>
         </div>
 
-        <!-- Question card (hidden until recording starts) -->
-        <div class="qa__card qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
-          <div class="qa__q" id="qaQuestion"></div>
-          <div class="qa__hint" id="qaHint"></div>
-        </div>
+        <!-- RIGHT: webcam preview -->
+        <aside class="cam" aria-label="Camera preview">
+          <div class="cam__header">
+            <span class="cam__title">Camera preview</span>
+            <span class="cam__status" id="camStatus">Off</span>
+          </div>
 
-        <div class="qa__controls" aria-label="Question navigation">
-          <button
-            type="button"
-            class="qa-btn"
-            id="qaNext"
-            aria-label="Next question"
-            disabled
-          >
-            Next question
-          </button>
-        </div>
+          <div class="cam__frame">
+            <video id="camVideo" autoplay playsinline muted></video>
+          </div>
 
-        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div class="qa__progress-bar" id="qaProgressBar" style="width: 0%;"></div>
-        </div>
-
-        <p class="qa__lockNote" id="qaLockNote">
-          You must start recording before questions are shown.
-        </p>
+          <p class="cam__note">
+            Local preview only. Camera access requires your permission.
+          </p>
+        </aside>
       </div>
 
       <div class="qa__footer" role="note">
@@ -135,7 +154,7 @@
     </section>
 
     <p class="body-text body-text--subtle">
-      This recording will be shared with the UKVI and the CQC Care Quality Commission..
+      Continue when ready. Access may be restricted depending on user permissions.
     </p>
 
     <div class="actions">
@@ -188,9 +207,7 @@
       <a
         class="button button--disabled"
         id="submitBtn"
-        href="https://www.gov.uk/government/publications/workers-and-temporary-workers-guidance-for-sponsors-part-2-sponsor-a-worker/workers-and-temporary-workers-guidance-for-sponsors-part-2-sponsor-a-worker-general-information-accessible"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#"
         aria-disabled="true"
       >
         Submit supervision
@@ -215,7 +232,7 @@
 
       <div class="app-footer__meta">
         <p class="app-footer__note">
-          All content is available under the Open Government Licence v3.0, except where otherwise stated.
+          Internal training/demo interface. Do not present this page as an official government service.
         </p>
       </div>
     </div>
@@ -245,6 +262,11 @@
       const qaCard = document.getElementById("qaCard");
       const qaLiveBadge = document.getElementById("qaLiveBadge");
 
+      // Webcam
+      const camVideo = document.getElementById("camVideo");
+      const camStatus = document.getElementById("camStatus");
+      let camStream = null;
+
       // ---------------------------
       // State
       // ---------------------------
@@ -265,7 +287,43 @@
       }
       function renderTimer() { timerEl.textContent = formatTime(elapsedMs); }
 
+      // ---------------------------
+      // Webcam (local preview only)
+      // ---------------------------
+      async function startCamera() {
+        if (camStream) return;
+        try {
+          camStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 640, height: 480, facingMode: "user" },
+            audio: false
+          });
+          camVideo.srcObject = camStream;
+          camStatus.textContent = "On";
+          camStatus.classList.add("cam__status--on");
+        } catch (err) {
+          camStatus.textContent = "Blocked";
+          camStatus.classList.remove("cam__status--on");
+          console.error("Camera error:", err);
+        }
+      }
+
+      function stopCamera() {
+        if (!camStream) {
+          camVideo.srcObject = null;
+          camStatus.textContent = "Off";
+          camStatus.classList.remove("cam__status--on");
+          return;
+        }
+        camStream.getTracks().forEach(t => t.stop());
+        camStream = null;
+        camVideo.srcObject = null;
+        camStatus.textContent = "Off";
+        camStatus.classList.remove("cam__status--on");
+      }
+
+      // ---------------------------
       // Submit gating: requires consent + recording
+      // ---------------------------
       function updateSubmitState() {
         const ok = consentCheck.checked && isRecording;
         if (ok) {
@@ -286,7 +344,9 @@
         }
       }
 
+      // ---------------------------
       // Questions gating: visible only when recording
+      // ---------------------------
       function setQuestionsVisible(visible) {
         if (visible) {
           qaCard.classList.remove("qa__card--hidden");
@@ -299,12 +359,10 @@
           qaLockNote.style.display = "block";
           qaLiveBadge.style.display = "none";
 
-          // Reset meta text to initial placeholder
           qaNumber.textContent = "Questions will appear after recording has started.";
           qaQuestion.textContent = "";
           qaHint.textContent = "";
 
-          // Reset progress
           qaProgressBar.style.width = "0%";
           qaProgress.setAttribute("aria-valuenow", "0");
         }
@@ -329,6 +387,9 @@
         startTime = Date.now() - elapsedMs;
         if (!intervalId) intervalId = setInterval(tick, 250);
 
+        // Start webcam preview when recording starts
+        startCamera();
+
         // Show questions + render first question
         idx = 0;
         renderQuestion();
@@ -349,6 +410,9 @@
         intervalId = null;
         renderTimer();
 
+        // Stop webcam preview when recording stops
+        stopCamera();
+
         // Hide questions when recording stops
         setQuestionsVisible(false);
 
@@ -360,7 +424,7 @@
         else startRec();
       });
 
-      // Prevent click when submit is disabled
+      // Prevent submit click when disabled
       submitBtn.addEventListener("click", function (e) {
         if (submitBtn.getAttribute("aria-disabled") === "true") {
           e.preventDefault();
@@ -369,57 +433,40 @@
 
       consentCheck.addEventListener("change", updateSubmitState);
 
-      // Initial paint
+      // Initial state
       renderTimer();
-      stopRec(); // enforces OFF state + hides questions + disables submit
-
+      stopRec();             // enforces OFF state + hides questions
+      setQuestionsVisible(false);
+      updateSubmitState();
 
       // ---------------------------
-      // LIVE Questions (one-by-one) — expanded list (no duplicates)
+      // Questions list (no duplicates)
       // ---------------------------
       const questions = [
-        // Role / duties / supervision
         { q: "State your name and address.", hint: "Say your full name and address." },
         { q: "Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
         { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
         { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
         { q: "How do you receive your rota and how do you confirm shifts?", hint: "Mention the method or system used." },
         { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns and locations." },
-        { q: "Are you aware that you must make yourself available to work your allocated hours on a weekly basis?", hint: "" },
-        { q: "Do you get breaks in between your given hours?", hint: "Describe typical breaks." },
-
-        // Secondary employment / restrictions
+        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
         { q: "Are you working anywhere else?", hint: "Answer clearly." },
         { q: "Have you worked on any other projects other than with the sponsored company?", hint: "" },
         { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "" },
-        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
-
-        // Pay / tax / cash-in-hand
         { q: "What is the current rate at which you are being paid?", hint: "State hourly rate/salary and how often you are paid." },
         { q: "Do you receive payslips and can you confirm how you are paid?", hint: "E.g., bank transfer; frequency; payslip access." },
         { q: "Are you being responsible in paying your taxes?", hint: "Answer truthfully." },
         { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
-
-        // Welfare / modern slavery / fairness
         { q: "Are you comfortable working for the sponsored company?", hint: "" },
         { q: "Are you aware of the concept of modern slavery?", hint: "" },
         { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
         { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "" },
-        { q: "Do you feel safe at work and supported by management?", hint: "If no, explain what support you need." },
-        { q: "Have you been coached before this supervision?", hint: "If so, explain by whom." },
-
-        // Team / conduct
         { q: "How do you get on with your co-workers?", hint: "" },
         { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
-        { q: "Have you ever raised a concern formally (e.g., grievance or incident report)?", hint: "If yes, explain the outcome." },
-
-        // Practice / safeguarding / training
         { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
         { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
-
-        // Wellbeing
-        { q: "Have you passed a B2 English Test?", hint: "If not, please state when this will take place." },
+        { q: "Have you passed a B2 English test?", hint: "If not, state when this will take place." },
         { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." }
       ];
 
@@ -433,29 +480,25 @@
         qaQuestion.textContent = questions[idx].q;
         qaHint.textContent = questions[idx].hint || "";
 
-        // Progress
         const pct = Math.round((current / total) * 100);
         qaProgressBar.style.width = pct + "%";
-        qaProgress.setAttribute("aria-valuemin", "0");
-        qaProgress.setAttribute("aria-valuemax", "100");
         qaProgress.setAttribute("aria-valuenow", String(pct));
 
-        // Next label
         const isLast = idx === total - 1;
         qaNext.textContent = isLast ? "Finish questions" : "Next question";
         qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
       }
 
       qaNext.addEventListener("click", function () {
-        if (!isRecording) return; // hard block
+        if (!isRecording) return;
 
         if (idx < questions.length - 1) {
           idx++;
           renderQuestion();
         } else {
           qaNumber.textContent = "Completed";
-          qaQuestion.textContent = "Questions completed. You may now proceed with your usual supervision. If the employer or you have any questions, this is the time to discuss those";
-          qaHint.textContent = "You may proceed when ready.";
+          qaQuestion.textContent = "Questions completed. You may proceed when ready.";
+          qaHint.textContent = "";
           qaNext.disabled = true;
           qaNext.textContent = "Finished";
           qaProgressBar.style.width = "100%";
@@ -463,8 +506,8 @@
         }
       });
 
-      // Start hidden until recording starts
-      setQuestionsVisible(false);
+      // Prevent leaving camera running if user navigates away
+      window.addEventListener("beforeunload", stopCamera);
     })();
   </script>
 </body>
