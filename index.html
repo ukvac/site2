@@ -13,7 +13,7 @@
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
-        <span class="app-header__brand">Compliance Portal</span>
+        <span class="app-header__brand">GOV.UK Compliance Portal</span>
       </div>
       <div class="app-header__center">Supervision Recording</div>
       <div class="app-header__right">Worker- <strong>Archabahen Shaileshbhai Patel</strong></div>
@@ -24,7 +24,7 @@
     <!-- Phase banner -->
     <div class="phase-banner" aria-label="Service status">
       <strong class="phase-banner__tag">BETA</strong>
-      <span class="phase-banner__text">This is an internal training/demo service.</span>
+      <span class="phase-banner__text">This is a new service.</span>
     </div>
 
     <!-- Service name banner -->
@@ -92,8 +92,8 @@
 
       <div class="qa__body">
         <div class="qa__meta" aria-live="polite">
-          <span class="qa__count" id="qaCount">Question 1 of 10</span>
-          <span class="qa__live" aria-hidden="true">LIVE</span>
+          <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
+          <span class="qa__number" id="qaNumber">Question 1</span>
         </div>
 
         <div class="qa__card" role="group" aria-label="Current question">
@@ -102,13 +102,24 @@
         </div>
 
         <div class="qa__controls" aria-label="Question navigation">
-          <button type="button" class="qa-btn" id="qaPrev" aria-label="Previous question">Previous</button>
-          <button type="button" class="qa-btn qa-btn--primary" id="qaNext" aria-label="Next question">Next question</button>
+          <button
+            type="button"
+            class="qa-btn qa-btn--primary"
+            id="qaNext"
+            aria-label="Next question"
+            disabled
+          >
+            Next question
+          </button>
         </div>
 
-        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1">
-          <div class="qa__progress-bar" id="qaProgressBar" style="width: 10%;"></div>
+        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1">
+          <div class="qa__progress-bar" id="qaProgressBar" style="width: 0%;"></div>
         </div>
+
+        <p class="qa__lockNote" id="qaLockNote">
+          You must start recording before you can continue to the next question.
+        </p>
       </div>
 
       <div class="qa__footer" role="note">
@@ -116,7 +127,7 @@
       </div>
     </section>
 
-    <p class="body-text">
+    <p class="body-text body-text--subtle">
       Continue to the secure portal to complete your staff supervision record. Access may be restricted depending on user permissions.
     </p>
 
@@ -167,11 +178,11 @@
           </span>
         </label>
         <p class="consent__hint" id="consentHint">
-          You must confirm consent before you can submit the supervision record.
+          You must confirm consent and start recording before you can submit.
         </p>
       </div>
 
-      <!-- Submit button (disabled until consent is ticked) -->
+      <!-- Submit button (disabled until consent + recording started) -->
       <a
         class="button button--disabled"
         id="submitBtn"
@@ -212,33 +223,77 @@
   <script>
     (function () {
       // ---------------------------
-      // Recording UI (starts OFF)
+      // Elements
       // ---------------------------
       const btn = document.getElementById("recToggle");
       const btnText = document.getElementById("recToggleText");
       const statusLabel = document.getElementById("recStatusLabel");
       const timerEl = document.getElementById("recTimer");
 
+      const consentCheck = document.getElementById("consentCheck");
+      const submitBtn = document.getElementById("submitBtn");
+      const consentHint = document.getElementById("consentHint");
+
+      const qaNumber = document.getElementById("qaNumber");
+      const qaQuestion = document.getElementById("qaQuestion");
+      const qaHint = document.getElementById("qaHint");
+      const qaNext = document.getElementById("qaNext");
+      const qaProgressBar = document.getElementById("qaProgressBar");
+      const qaProgress = document.querySelector(".qa__progress");
+      const qaLockNote = document.getElementById("qaLockNote");
+
+      // ---------------------------
+      // State
+      // ---------------------------
       let isRecording = false;
       let startTime = 0;
       let elapsedMs = 0;
       let intervalId = null;
 
-      function pad2(n) {
-        return String(n).padStart(2, "0");
-      }
-
+      // ---------------------------
+      // Helpers
+      // ---------------------------
+      function pad2(n) { return String(n).padStart(2, "0"); }
       function formatTime(ms) {
         const totalSec = Math.floor(ms / 1000);
         const mm = Math.floor(totalSec / 60);
         const ss = totalSec % 60;
         return pad2(mm) + ":" + pad2(ss);
       }
-
       function renderTimer() {
         timerEl.textContent = formatTime(elapsedMs);
       }
 
+      // Submit gating: requires consent + recording
+      function updateSubmitState() {
+        const ok = consentCheck.checked && isRecording;
+        if (ok) {
+          submitBtn.classList.remove("button--disabled");
+          submitBtn.setAttribute("aria-disabled", "false");
+          consentHint.textContent = "Consent confirmed and recording started. You can now submit.";
+        } else {
+          submitBtn.classList.add("button--disabled");
+          submitBtn.setAttribute("aria-disabled", "true");
+
+          if (!consentCheck.checked && !isRecording) {
+            consentHint.textContent = "You must confirm consent and start recording before you can submit.";
+          } else if (!consentCheck.checked) {
+            consentHint.textContent = "You must confirm consent before you can submit.";
+          } else {
+            consentHint.textContent = "You must start recording before you can submit.";
+          }
+        }
+      }
+
+      // Questions gating: Next enabled only when recording
+      function updateQuestionNavState() {
+        qaNext.disabled = !isRecording;
+        qaLockNote.style.display = isRecording ? "none" : "block";
+      }
+
+      // ---------------------------
+      // Recording (starts OFF)
+      // ---------------------------
       function tick() {
         elapsedMs = Date.now() - startTime;
         renderTimer();
@@ -254,6 +309,9 @@
 
         startTime = Date.now() - elapsedMs;
         if (!intervalId) intervalId = setInterval(tick, 250);
+
+        updateQuestionNavState();
+        updateSubmitState();
       }
 
       function stopRec() {
@@ -267,6 +325,9 @@
         if (intervalId) clearInterval(intervalId);
         intervalId = null;
         renderTimer();
+
+        updateQuestionNavState();
+        updateSubmitState();
       }
 
       btn.addEventListener("click", function () {
@@ -274,151 +335,95 @@
         else startRec();
       });
 
-      renderTimer(); // initial paint
-      stopRec();     // enforce off state
-
-
-      // ---------------------------
-      // Consent gating (enables submit)
-      // ---------------------------
-      const consentCheck = document.getElementById("consentCheck");
-      const submitBtn = document.getElementById("submitBtn");
-      const consentHint = document.getElementById("consentHint");
-
-      function setSubmitEnabled(enabled) {
-        if (enabled) {
-          submitBtn.classList.remove("button--disabled");
-          submitBtn.setAttribute("aria-disabled", "false");
-          consentHint.textContent = "Consent confirmed. You can now submit.";
-        } else {
-          submitBtn.classList.add("button--disabled");
-          submitBtn.setAttribute("aria-disabled", "true");
-          consentHint.textContent = "You must confirm consent before you can submit the supervision record.";
-        }
-      }
-
-      consentCheck.addEventListener("change", function () {
-        setSubmitEnabled(consentCheck.checked);
-      });
-
-      // Prevent click when disabled (anchor can't truly disable)
+      // Prevent click when submit is disabled
       submitBtn.addEventListener("click", function (e) {
         if (submitBtn.getAttribute("aria-disabled") === "true") {
           e.preventDefault();
-          consentHint.focus?.();
         }
       });
 
-      setSubmitEnabled(false);
+      consentCheck.addEventListener("change", updateSubmitState);
 
+      // Initial paint
+      renderTimer();
+      stopRec(); // enforces off state + disables Next + submit
 
       // ---------------------------
-      // LIVE Questions (one-by-one)
+      // LIVE Questions (one-by-one) — deduped + added your questions
       // ---------------------------
       const questions = [
-        {
-          q: "Confirm your job title and main duties in your own words.",
-          hint: "Include typical tasks you do each week."
-        },
-        {
-          q: "Who is your line manager and how often do you receive supervision?",
-          hint: "State the last supervision date if you can."
-        },
-        {
-          q: "What are your normal working hours and where do you usually work from?",
-          hint: "Include any regular changes (e.g., rota patterns)."
-        },
-        {
-          q: "Explain your current rota: how is it issued and how do you confirm shifts?",
-          hint: "Mention the system/app used (if any)."
-        },
-        {
-          q: "Describe how you record visit notes and report incidents or safeguarding concerns.",
-          hint: "Give one example of a situation and what you did."
-        },
-        {
-          q: "What training have you completed in the last 3 months?",
-          hint: "E.g., moving & handling, medication, safeguarding, infection control."
-        },
-        {
-          q: "If you were unsure about a care task, what steps would you take before proceeding?",
-          hint: "Focus on escalation and safe practice."
-        },
-        {
-          q: "Do you have any health, wellbeing, or workload concerns you want to raise today?",
-          hint: "This can include stress, fatigue, or support needs."
-        },
-        {
-          q: "Confirm you understand your obligation to notify your employer about changes to contact details or availability.",
-          hint: "Explain what you would do if your circumstances change."
-        },
-        {
-          q: "Is there anything preventing you from meeting the required standard of communication in your role?",
-          hint: "If yes, describe what support would help."
-        }
-      ];
+        { q: "Are you comfortable working for the sponsored company?", hint: "" },
+        { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
+        { q: "Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
+        { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
+        { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns." },
+        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
+        { q: "Are you aware that you must make yourself available to work your allocated hours on a weekly basis?", hint: "" },
 
-      const qaCount = document.getElementById("qaCount");
-      const qaQuestion = document.getElementById("qaQuestion");
-      const qaHint = document.getElementById("qaHint");
-      const qaPrev = document.getElementById("qaPrev");
-      const qaNext = document.getElementById("qaNext");
-      const qaProgressBar = document.getElementById("qaProgressBar");
-      const qaProgress = document.querySelector(".qa__progress");
+        { q: "Are you working anywhere else?", hint: "Answer clearly." },
+        { q: "Have you worked on any other projects other than with the sponsored company?", hint: "" },
+        { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "" },
+
+        { q: "What is the current rate at which you are being paid?", hint: "State hourly rate/salary and how often you are paid." },
+        { q: "Are you being responsible in paying your taxes?", hint: "Answer truthfully." },
+        { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
+
+        { q: "Are you aware of the concept of modern slavery?", hint: "" },
+        { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
+        { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "" },
+
+        { q: "How do you get on with your co-workers?", hint: "" },
+        { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
+        { q: "Do you get breaks in between your given hours?", hint: "Describe typical breaks." },
+
+        { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
+        { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
+        { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
+        { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." }
+      ];
 
       let idx = 0;
 
       function renderQuestion() {
-        const total = questions.length;
         const current = idx + 1;
+        const total = questions.length;
 
-        qaCount.textContent = `Question ${current} of ${total}`;
+        qaNumber.textContent = "Question " + current;
         qaQuestion.textContent = questions[idx].q;
         qaHint.textContent = questions[idx].hint || "";
 
-        // Buttons
-        qaPrev.disabled = idx === 0;
-        qaPrev.classList.toggle("qa-btn--disabled", idx === 0);
-
-        const isLast = idx === total - 1;
-        qaNext.textContent = isLast ? "Finish" : "Next question";
-        qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
-
-        // Progressbar
+        // Progress
         const pct = Math.round((current / total) * 100);
         qaProgressBar.style.width = pct + "%";
         qaProgress.setAttribute("aria-valuemin", "1");
         qaProgress.setAttribute("aria-valuemax", String(total));
         qaProgress.setAttribute("aria-valuenow", String(current));
+
+        // Next text changes at end
+        const isLast = idx === total - 1;
+        qaNext.textContent = isLast ? "Finish questions" : "Next question";
+        qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
       }
 
-      qaPrev.addEventListener("click", function () {
-        if (idx > 0) {
-          idx--;
-          renderQuestion();
-        }
-      });
-
       qaNext.addEventListener("click", function () {
+        if (!isRecording) return; // hard block
+
         if (idx < questions.length - 1) {
           idx++;
           renderQuestion();
         } else {
-          // Finish state
-          qaQuestion.textContent = "Questions completed.";
-          qaHint.textContent = "You may review responses and proceed when ready.";
-          qaCount.textContent = `Completed (${questions.length} questions)`;
-          qaPrev.disabled = false;
-          qaPrev.classList.remove("qa-btn--disabled");
+          // finish state
+          qaNumber.textContent = "Completed";
+          qaQuestion.textContent = "Questions completed. - You may proceed with your Employer supervision. Do not stop the recording.";
+          qaHint.textContent = "You may proceed when ready.";
           qaNext.disabled = true;
-          qaNext.classList.add("qa-btn--disabled");
           qaNext.textContent = "Finished";
           qaProgressBar.style.width = "100%";
-          qaProgress.setAttribute("aria-valuenow", String(questions.length));
         }
       });
 
       renderQuestion();
+      updateQuestionNavState();
     })();
   </script>
 </body>
