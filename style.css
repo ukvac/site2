@@ -383,7 +383,7 @@ a:focus{
 
 /* Questions panel */
 .qa{
-  max-width: 960px;
+  max-width: 760px;
   margin: 18px 0 18px;
   border: 1px solid var(--gov-border);
   border-top: 6px solid var(--gov-blue-underline);
@@ -407,17 +407,7 @@ a:focus{
   color: var(--gov-grey);
   max-width: 90ch;
 }
-
 .qa__body{ padding: 14px 16px 16px; }
-
-/* Two-column layout (questions + cam) */
-.qa__layout{
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 16px;
-  align-items: start;
-}
-.qa__left{ min-width: 0; }
 
 .qa__meta{
   display:flex;
@@ -467,7 +457,6 @@ a:focus{
   font-size: 14px;
 }
 
-/* Card hidden until recording */
 .qa__card{
   border: 1px solid #e2e2e2;
   border-left: 4px solid var(--gov-blue);
@@ -480,7 +469,6 @@ a:focus{
 .qa__q{ font-weight: 800; margin-bottom: 6px; }
 .qa__hint{ color: var(--gov-grey); font-size: 14px; }
 
-/* Controls */
 .qa__controls{
   margin-top: 6px;
   margin-bottom: 14px;
@@ -504,7 +492,6 @@ a:focus{
   cursor: not-allowed;
 }
 
-/* Progress */
 .qa__progress{
   height: 10px;
   background: #e6e6e6;
@@ -530,12 +517,20 @@ a:focus{
   color: var(--gov-black);
 }
 
-/* Webcam card */
-.cam{
+/* Floating camera box: sits to the right of the questions card */
+.cam-float{
+  position: fixed;
+  right: 20px;
+  top: 170px;           /* tweak if you want higher/lower */
+  width: 280px;
+  z-index: 50;
   border: 1px solid #e2e2e2;
   background: #ffffff;
   padding: 10px 10px 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
 }
+
+/* Camera internals */
 .cam__header{
   display:flex;
   align-items:center;
@@ -577,6 +572,22 @@ a:focus{
   color: var(--gov-grey);
 }
 
+/* Make room for the floating panel on wider screens */
+@media (min-width: 1200px){
+  .container{ padding-right: 340px; } /* prevents overlap with fixed cam box */
+}
+
+/* On smaller screens: disable floating so it doesn't cover content */
+@media (max-width: 1199px){
+  .cam-float{
+    position: static;
+    width: auto;
+    max-width: 760px;
+    margin: 0 auto 18px;
+    box-shadow: none;
+  }
+}
+
 /* Animations */
 @keyframes pulse{
   0%{ transform: scale(1); }
@@ -604,11 +615,6 @@ a:focus{
 }
 
 /* Mobile tweaks */
-@media (max-width: 860px){
-  .qa__layout{
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 640px){
   .app-header__inner{
     flex-direction: column;
