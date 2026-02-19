@@ -1,514 +1,626 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Supervision Recording Portal</title>
-
-  <link rel="stylesheet" href="style.css" />
-</head>
-
-<body>
-  <header class="app-header" role="banner">
-    <div class="container app-header__inner">
-      <div class="app-header__left">
-        <span class="app-header__brand">Compliance Portal</span>
-      </div>
-      <div class="app-header__center">Supervision Recording</div>
-      <div class="app-header__right">Worker- <strong>Archabahen Shaileshbhai Patel</strong></div>
-    </div>
-  </header>
-
-  <main class="container" role="main">
-    <div class="phase-banner" aria-label="Service status">
-      <strong class="phase-banner__tag">BETA</strong>
-      <span class="phase-banner__text">This is a new service.</span>
-    </div>
-
-    <section class="service-name" aria-label="Service name">
-      <div class="service-name__box">
-        <strong class="service-name__text">Skilled Worker Supervision Recording</strong>
-      </div>
-    </section>
-
-    <p class="back-link-wrap">
-      <a class="back-link" href="#" onclick="history.back(); return false;">Back</a>
-    </p>
-
-    <h1>Supervision session.</h1>
-    <h2 class="section-heading">This is a live session.</h2>
-
-    <div class="summary" role="region" aria-label="Supervision summary">
-      <div class="summary__row">
-        <div class="summary__key">Worker</div>
-        <div class="summary__value">Archabahen Shaileshbhai Patel - Skilled Worker</div>
-      </div>
-
-      <div class="summary__divider" role="presentation"></div>
-
-      <div class="summary__row">
-        <div class="summary__key">Session</div>
-        <div class="summary__value">Health &amp; Care Worker Supervision. Target submission date: 28 February 2026.</div>
-      </div>
-
-      <div class="summary__divider" role="presentation"></div>
-
-      <div class="summary__row summary__row--total">
-        <div class="summary__key">Reminder</div>
-        <div class="summary__value">
-          Please check your microphone and camera settings. The camera feed should clearly show both the supervisor and the worker.
-        </div>
-      </div>
-    </div>
-
-    <div class="warning" role="note" aria-label="Before you continue">
-      <div class="warning__icon" aria-hidden="true">!</div>
-      <div class="warning__content">
-        <h3 class="warning__title">Before you continue</h3>
-        <p class="warning__text">
-          This meeting is conducted for internal compliance, safeguarding and quality assurance purposes.
-          We require full and proper responses from the worker. Short answers may require follow-up questions. Questions are randomly generated.
-        </p>
-        <p class="warning__text">
-          Once you select ‘Submit supervision’ you may not be able to return and edit this session record.
-        </p>
-      </div>
-    </div>
-
-    <!-- LIVE Questions + Webcam (hidden until recording starts) -->
-    <section class="qa" aria-label="Live supervision questions">
-      <div class="qa__header">
-        <h3 class="qa__title">Compliance supervision and welfare questions (live)</h3>
-        <p class="qa__subtitle">
-          Questions appear one at a time during the session. Answer clearly and provide examples where possible.
-          The person conducting this meeting should ask the questions verbally.
-        </p>
-      </div>
-
-      <div class="qa__body qa__layout">
-        <!-- LEFT: questions -->
-        <div class="qa__left">
-          <div class="qa__meta" aria-live="polite">
-            <div class="qa__metaRow">
-              <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Pre-Requisite LIVE)</span>
-
-              <!-- LIVE badge appears only when recording is ON -->
-              <span class="qa__liveBadge" id="qaLiveBadge" aria-label="Live">
-                <span class="qa__liveDot" aria-hidden="true"></span>
-                LIVE
-              </span>
-            </div>
-
-            <div class="qa__metaRow qa__metaRow--secondary">
-              <span class="qa__number" id="qaNumber">Questions will appear after recording has started.</span>
-            </div>
-          </div>
-
-          <!-- Question card (hidden until recording starts) -->
-          <div class="qa__card qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
-            <div class="qa__q" id="qaQuestion"></div>
-            <div class="qa__hint" id="qaHint"></div>
-          </div>
-
-          <div class="qa__controls" aria-label="Question navigation">
-            <button
-              type="button"
-              class="qa-btn"
-              id="qaNext"
-              aria-label="Next question"
-              disabled
-            >
-              Next question
-            </button>
-          </div>
-
-          <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="qa__progress-bar" id="qaProgressBar" style="width: 0%;"></div>
-          </div>
-
-          <p class="qa__lockNote" id="qaLockNote">
-            You must start recording before questions are shown.
-          </p>
-        </div>
-
-        <!-- RIGHT: webcam preview -->
-        <aside class="cam" aria-label="Camera preview">
-          <div class="cam__header">
-            <span class="cam__title">Camera preview</span>
-            <span class="cam__status" id="camStatus">Off</span>
-          </div>
-
-          <div class="cam__frame">
-            <video id="camVideo" autoplay playsinline muted></video>
-          </div>
-
-          <p class="cam__note">
-            Local preview only. Camera access requires your permission.
-          </p>
-        </aside>
-      </div>
-
-      <div class="qa__footer" role="note">
-        <strong>Tip:</strong> If you do not know an answer, say so and explain how you would find out.
-      </div>
-    </section>
-
-    <p class="body-text body-text--subtle">
-      Continue when ready. Access may be restricted depending on user permissions.
-    </p>
-
-    <div class="actions">
-      <div class="recording-panel" role="note" aria-label="Session recording notice">
-        <div class="recording-panel__badge">
-          <span class="recording-badge" aria-hidden="true">SESSION</span>
-          <span class="recording-panel__title">Session recording control</span>
-        </div>
-        <p class="recording-panel__text">
-          Recording does not begin automatically. Select “Start recording” when ready.
-        </p>
-      </div>
-
-      <div class="recording-controls" aria-label="Recording controls">
-        <button
-          type="button"
-          id="recToggle"
-          class="rec-toggle rec-toggle--off"
-          aria-pressed="false"
-          aria-label="Start recording"
-        >
-          <span class="rec-dot" aria-hidden="true">
-            <svg class="rec-mic" viewBox="0 0 24 24" role="img" aria-label="Microphone icon">
-              <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 0-2 0 3 3 0 0 1-6 0 1 1 0 1 0-2 0 5 5 0 0 0 4 4.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1A5 5 0 0 0 17 11Z"/>
-            </svg>
-          </span>
-          <span class="rec-toggle__text" id="recToggleText">Start recording</span>
-        </button>
-
-        <div class="rec-status" aria-live="polite">
-          <span class="rec-status__label" id="recStatusLabel">Not recording</span>
-          <span class="rec-status__sep" aria-hidden="true">•</span>
-          <span class="rec-timer" id="recTimer">00:00</span>
-        </div>
-      </div>
-
-      <div class="consent" role="group" aria-label="Consent">
-        <label class="consent__label">
-          <input type="checkbox" id="consentCheck" class="consent__checkbox" />
-          <span class="consent__text">
-            I confirm I have informed all participants that this session may be recorded for internal compliance, safeguarding and quality purposes,
-            and I have the required permission to proceed.
-          </span>
-        </label>
-        <p class="consent__hint" id="consentHint">
-          You must confirm consent and start recording before you can submit.
-        </p>
-      </div>
-
-      <a
-        class="button button--disabled"
-        id="submitBtn"
-        href="#"
-        aria-disabled="true"
-      >
-        Submit supervision
-      </a>
-    </div>
-
-    <ul class="link-list">
-      <li><a href="#">Return to this application later</a></li>
-      <li><a href="#">Show and edit answers</a></li>
-    </ul>
-  </main>
-
-  <footer class="app-footer" role="contentinfo">
-    <div class="container app-footer__inner">
-      <div class="app-footer__links">
-        <a href="#">Cookies</a>
-        <a href="#">Terms and Conditions</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Accessibility</a>
-        <a href="#">Contact</a>
-      </div>
-
-      <div class="app-footer__meta">
-        <p class="app-footer__note">
-          Internal training/demo interface. Do not present this page as an official government service.
-        </p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    (function () {
-      // ---------------------------
-      // Elements
-      // ---------------------------
-      const btn = document.getElementById("recToggle");
-      const btnText = document.getElementById("recToggleText");
-      const statusLabel = document.getElementById("recStatusLabel");
-      const timerEl = document.getElementById("recTimer");
-
-      const consentCheck = document.getElementById("consentCheck");
-      const submitBtn = document.getElementById("submitBtn");
-      const consentHint = document.getElementById("consentHint");
-
-      const qaNumber = document.getElementById("qaNumber");
-      const qaQuestion = document.getElementById("qaQuestion");
-      const qaHint = document.getElementById("qaHint");
-      const qaNext = document.getElementById("qaNext");
-      const qaProgressBar = document.getElementById("qaProgressBar");
-      const qaProgress = document.querySelector(".qa__progress");
-      const qaLockNote = document.getElementById("qaLockNote");
-      const qaCard = document.getElementById("qaCard");
-      const qaLiveBadge = document.getElementById("qaLiveBadge");
-
-      // Webcam
-      const camVideo = document.getElementById("camVideo");
-      const camStatus = document.getElementById("camStatus");
-      let camStream = null;
-
-      // ---------------------------
-      // State
-      // ---------------------------
-      let isRecording = false;
-      let startTime = 0;
-      let elapsedMs = 0;
-      let intervalId = null;
-
-      // ---------------------------
-      // Helpers
-      // ---------------------------
-      function pad2(n) { return String(n).padStart(2, "0"); }
-      function formatTime(ms) {
-        const totalSec = Math.floor(ms / 1000);
-        const mm = Math.floor(totalSec / 60);
-        const ss = totalSec % 60;
-        return pad2(mm) + ":" + pad2(ss);
-      }
-      function renderTimer() { timerEl.textContent = formatTime(elapsedMs); }
-
-      // ---------------------------
-      // Webcam (local preview only)
-      // ---------------------------
-      async function startCamera() {
-        if (camStream) return;
-        try {
-          camStream = await navigator.mediaDevices.getUserMedia({
-            video: { width: 640, height: 480, facingMode: "user" },
-            audio: false
-          });
-          camVideo.srcObject = camStream;
-          camStatus.textContent = "On";
-          camStatus.classList.add("cam__status--on");
-        } catch (err) {
-          camStatus.textContent = "Blocked";
-          camStatus.classList.remove("cam__status--on");
-          console.error("Camera error:", err);
-        }
-      }
-
-      function stopCamera() {
-        if (!camStream) {
-          camVideo.srcObject = null;
-          camStatus.textContent = "Off";
-          camStatus.classList.remove("cam__status--on");
-          return;
-        }
-        camStream.getTracks().forEach(t => t.stop());
-        camStream = null;
-        camVideo.srcObject = null;
-        camStatus.textContent = "Off";
-        camStatus.classList.remove("cam__status--on");
-      }
-
-      // ---------------------------
-      // Submit gating: requires consent + recording
-      // ---------------------------
-      function updateSubmitState() {
-        const ok = consentCheck.checked && isRecording;
-        if (ok) {
-          submitBtn.classList.remove("button--disabled");
-          submitBtn.setAttribute("aria-disabled", "false");
-          consentHint.textContent = "Consent confirmed and recording started. You can now submit.";
-        } else {
-          submitBtn.classList.add("button--disabled");
-          submitBtn.setAttribute("aria-disabled", "true");
-
-          if (!consentCheck.checked && !isRecording) {
-            consentHint.textContent = "You must confirm consent and start recording before you can submit.";
-          } else if (!consentCheck.checked) {
-            consentHint.textContent = "You must confirm consent before you can submit.";
-          } else {
-            consentHint.textContent = "You must start recording before you can submit.";
-          }
-        }
-      }
-
-      // ---------------------------
-      // Questions gating: visible only when recording
-      // ---------------------------
-      function setQuestionsVisible(visible) {
-        if (visible) {
-          qaCard.classList.remove("qa__card--hidden");
-          qaNext.disabled = false;
-          qaLockNote.style.display = "none";
-          qaLiveBadge.style.display = "inline-flex";
-        } else {
-          qaCard.classList.add("qa__card--hidden");
-          qaNext.disabled = true;
-          qaLockNote.style.display = "block";
-          qaLiveBadge.style.display = "none";
-
-          qaNumber.textContent = "Questions will appear after recording has started.";
-          qaQuestion.textContent = "";
-          qaHint.textContent = "";
-
-          qaProgressBar.style.width = "0%";
-          qaProgress.setAttribute("aria-valuenow", "0");
-        }
-      }
-
-      // ---------------------------
-      // Recording (starts OFF)
-      // ---------------------------
-      function tick() {
-        elapsedMs = Date.now() - startTime;
-        renderTimer();
-      }
-
-      function startRec() {
-        isRecording = true;
-        btn.classList.remove("rec-toggle--off");
-        btn.setAttribute("aria-pressed", "true");
-        btn.setAttribute("aria-label", "Stop recording");
-        btnText.textContent = "Stop recording";
-        statusLabel.textContent = "Recording";
-
-        startTime = Date.now() - elapsedMs;
-        if (!intervalId) intervalId = setInterval(tick, 250);
-
-        // Start webcam preview when recording starts
-        startCamera();
-
-        // Show questions + render first question
-        idx = 0;
-        renderQuestion();
-        setQuestionsVisible(true);
-
-        updateSubmitState();
-      }
-
-      function stopRec() {
-        isRecording = false;
-        btn.classList.add("rec-toggle--off");
-        btn.setAttribute("aria-pressed", "false");
-        btn.setAttribute("aria-label", "Start recording");
-        btnText.textContent = "Start recording";
-        statusLabel.textContent = "Not recording";
-
-        if (intervalId) clearInterval(intervalId);
-        intervalId = null;
-        renderTimer();
-
-        // Stop webcam preview when recording stops
-        stopCamera();
-
-        // Hide questions when recording stops
-        setQuestionsVisible(false);
-
-        updateSubmitState();
-      }
-
-      btn.addEventListener("click", function () {
-        if (isRecording) stopRec();
-        else startRec();
-      });
-
-      // Prevent submit click when disabled
-      submitBtn.addEventListener("click", function (e) {
-        if (submitBtn.getAttribute("aria-disabled") === "true") {
-          e.preventDefault();
-        }
-      });
-
-      consentCheck.addEventListener("change", updateSubmitState);
-
-      // Initial state
-      renderTimer();
-      stopRec();             // enforces OFF state + hides questions
-      setQuestionsVisible(false);
-      updateSubmitState();
-
-      // ---------------------------
-      // Questions list (no duplicates)
-      // ---------------------------
-      const questions = [
-        { q: "State your name and address.", hint: "Say your full name and address." },
-        { q: "Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
-        { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
-        { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
-        { q: "How do you receive your rota and how do you confirm shifts?", hint: "Mention the method or system used." },
-        { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns and locations." },
-        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
-        { q: "Are you working anywhere else?", hint: "Answer clearly." },
-        { q: "Have you worked on any other projects other than with the sponsored company?", hint: "" },
-        { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "" },
-        { q: "What is the current rate at which you are being paid?", hint: "State hourly rate/salary and how often you are paid." },
-        { q: "Do you receive payslips and can you confirm how you are paid?", hint: "E.g., bank transfer; frequency; payslip access." },
-        { q: "Are you being responsible in paying your taxes?", hint: "Answer truthfully." },
-        { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
-        { q: "Are you comfortable working for the sponsored company?", hint: "" },
-        { q: "Are you aware of the concept of modern slavery?", hint: "" },
-        { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
-        { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "" },
-        { q: "How do you get on with your co-workers?", hint: "" },
-        { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
-        { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
-        { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
-        { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
-        { q: "Have you passed a B2 English test?", hint: "If not, state when this will take place." },
-        { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." }
-      ];
-
-      let idx = 0;
-
-      function renderQuestion() {
-        const current = idx + 1;
-        const total = questions.length;
-
-        qaNumber.textContent = "Question " + current;
-        qaQuestion.textContent = questions[idx].q;
-        qaHint.textContent = questions[idx].hint || "";
-
-        const pct = Math.round((current / total) * 100);
-        qaProgressBar.style.width = pct + "%";
-        qaProgress.setAttribute("aria-valuenow", String(pct));
-
-        const isLast = idx === total - 1;
-        qaNext.textContent = isLast ? "Finish questions" : "Next question";
-        qaNext.setAttribute("aria-label", isLast ? "Finish questions" : "Next question");
-      }
-
-      qaNext.addEventListener("click", function () {
-        if (!isRecording) return;
-
-        if (idx < questions.length - 1) {
-          idx++;
-          renderQuestion();
-        } else {
-          qaNumber.textContent = "Completed";
-          qaQuestion.textContent = "Questions completed. You may proceed when ready.";
-          qaHint.textContent = "";
-          qaNext.disabled = true;
-          qaNext.textContent = "Finished";
-          qaProgressBar.style.width = "100%";
-          qaProgress.setAttribute("aria-valuenow", "100");
-        }
-      });
-
-      // Prevent leaving camera running if user navigates away
-      window.addEventListener("beforeunload", stopCamera);
-    })();
-  </script>
-</body>
-</html>
+:root{
+  --gov-black:#0b0c0c;
+  --gov-blue:#1d70b8;
+  --gov-blue-underline:#003078;
+  --gov-green:#00703c;
+  --gov-grey:#505a5f;
+  --gov-border:#b1b4b6;
+  --gov-light:#f3f2f1;
+  --focus:#ffdd00;
+  --container: 960px;
+  --danger:#d4351c;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin: 29px 0 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color:var(--gov-black);
+  background:#fff;
+  line-height:1.5;
+}
+
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Header */
+.app-header{
+  background: var(--gov-blue);
+  color:#fff;
+  border-bottom: 6px solid var(--gov-blue-underline);
+}
+.app-header__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 0;
+}
+.app-header__brand{ font-weight:800; letter-spacing:.2px; }
+.app-header__center{ font-weight:800; }
+.app-header__right{ font-size:14px; opacity:.95; }
+
+/* Phase banner */
+.phase-banner{
+  margin: 14px 0 0;
+  padding-bottom: 10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom: 1px solid var(--gov-border);
+}
+.phase-banner__tag{
+  background: var(--gov-blue-underline);
+  color:#ffffff;
+  font-weight:800;
+  font-size:14px;
+  padding:2px 6px;
+  line-height:1.25;
+}
+.phase-banner__text{ font-size: 14px; color: var(--gov-grey); }
+
+/* Service name banner */
+.service-name{
+  margin: 10px 0 12px;
+  padding: 10px 0 14px;
+  border-bottom: 5px solid var(--gov-border);
+}
+.service-name__box{
+  background: #ffffff;
+  border: 2px solid var(--gov-border);
+  border-top: 6px solid var(--gov-black);
+  padding: 18px 18px;
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto;
+}
+.service-name__text{
+  display: inline-block;
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--gov-black);
+}
+
+/* Back link */
+.back-link-wrap{ margin: 6px 0 16px; }
+.back-link{
+  color: var(--gov-blue);
+  text-decoration:none;
+  position: relative;
+  padding-left: 16px;
+}
+.back-link:before{
+  content:"◀";
+  position:absolute;
+  left:0;
+  top:0;
+  color: var(--gov-blue);
+  font-size: 12px;
+  line-height: 1.8;
+}
+.back-link:hover{
+  text-decoration: underline;
+  text-decoration-color: var(--gov-blue-underline);
+}
+
+/* Headings */
+h1{
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.12;
+  margin: 10px 0 18px;
+  font-weight: 800;
+}
+.section-heading{
+  font-size: 19px;
+  margin: 0 0 10px;
+  font-weight:800;
+  color: var(--gov-blue-underline);
+}
+
+/* Summary */
+.summary{
+  max-width: 760px;
+  margin-bottom: 18px;
+}
+.summary__row{
+  display:flex;
+  gap:10px;
+  padding: 10px 0;
+}
+.summary__key{ min-width: 180px; font-weight:800; }
+.summary__value{ flex: 1; color: var(--gov-black); }
+.summary__divider{ height:1px; background: #dcdcdc; }
+
+/* Warning */
+.warning{
+  display:flex;
+  gap:16px;
+  max-width: 760px;
+  margin: 22px 0 18px;
+}
+.warning__icon{
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gov-black);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+}
+.warning__title{
+  margin: 0 0 6px;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight:800;
+}
+.warning__text{ margin: 0 0 10px; font-size: 16px; }
+
+/* Body */
+.body-text{
+  max-width: 760px;
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+.body-text--subtle{
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--gov-grey);
+}
+
+/* Links */
+a{
+  color: var(--gov-blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:hover{ text-decoration-color: var(--gov-blue-underline); }
+a:focus{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Buttons */
+.actions{ margin: 10px 0 10px; }
+.button{
+  display:inline-block;
+  background: var(--gov-green);
+  color:#fff;
+  text-decoration:none;
+  padding: 10px 16px;
+  font-size: 19px;
+  font-weight:800;
+  border: 2px solid transparent;
+}
+.button:hover{ filter: brightness(0.95); }
+.button:focus{
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+  border-color: var(--gov-black);
+}
+.button--disabled{
+  background: #b1b4b6;
+  color: #0b0c0c;
+  pointer-events: none;
+  border-color: #8a8c8f;
+}
+
+/* Link list */
+.link-list{
+  list-style:none;
+  padding:0;
+  margin: 12px 0 80px;
+}
+.link-list li{ margin: 10px 0; }
+
+/* Footer */
+.app-footer{
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  padding: 26px 0 40px;
+}
+.app-footer__inner{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.app-footer__links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+}
+.app-footer__links a{ font-size: 14px; }
+.app-footer__note{
+  margin:0;
+  color: var(--gov-grey);
+  font-size: 14px;
+  max-width: 800px;
+}
+
+/* Recording panel */
+.recording-panel{
+  max-width: 760px;
+  background: var(--gov-light);
+  border: 1px solid var(--gov-border);
+  padding: 12px 14px;
+  margin: 0 0 12px;
+}
+.recording-panel__badge{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 6px;
+}
+.recording-badge{
+  display:inline-block;
+  background: var(--gov-black);
+  color:#fff;
+  font-weight:800;
+  font-size: 12px;
+  letter-spacing: .5px;
+  padding: 2px 6px;
+}
+.recording-panel__title{ font-weight:800; font-size: 16px; }
+.recording-panel__text{
+  margin: 0;
+  font-size: 14px;
+  color: var(--gov-grey);
+  max-width: 60ch;
+}
+
+.recording-controls{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin: 0 0 16px;
+  flex-wrap: wrap;
+}
+
+/* Recording toggle */
+.rec-toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background: #fff;
+  border: 2px solid var(--gov-black);
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight:800;
+  font-size: 16px;
+  line-height: 1;
+}
+.rec-toggle:focus{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Dot + mic */
+.rec-dot{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--danger);
+  border: 2px solid #a32014;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position: relative;
+  flex: 0 0 auto;
+}
+.rec-mic{ width: 16px; height: 16px; fill: #ffffff; }
+
+/* Pulse when recording */
+.rec-toggle:not(.rec-toggle--off) .rec-dot{
+  animation: pulse 1.4s infinite;
+}
+.rec-toggle:not(.rec-toggle--off) .rec-dot::after{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(212, 53, 28, 0.55);
+  animation: ripple 1.4s infinite;
+}
+
+/* Off state */
+.rec-toggle--off .rec-dot{
+  background: #b1b4b6;
+  border-color: #8a8c8f;
+}
+.rec-toggle--off .rec-mic{ fill: #0b0c0c; }
+.rec-toggle--off .rec-dot::after{ content:none; }
+.rec-toggle--off .rec-dot{ animation: none; }
+
+/* Status + timer */
+.rec-status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size: 14px;
+  color: var(--gov-grey);
+}
+.rec-status__label{ font-weight:800; color: var(--gov-black); }
+.rec-timer{ font-variant-numeric: tabular-nums; font-weight:800; color: var(--gov-black); }
+
+/* Consent */
+.consent{
+  max-width: 760px;
+  border: 1px solid var(--gov-border);
+  background: #ffffff;
+  padding: 12px 14px;
+  margin: 0 0 16px;
+}
+.consent__label{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  cursor: pointer;
+}
+.consent__checkbox{
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+}
+.consent__text{
+  font-size: 14px;
+  color: var(--gov-black);
+  font-weight: 700;
+  max-width: 75ch;
+}
+.consent__hint{
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--gov-grey);
+}
+
+/* Questions panel */
+.qa{
+  max-width: 960px;
+  margin: 18px 0 18px;
+  border: 1px solid var(--gov-border);
+  border-top: 6px solid var(--gov-blue-underline);
+  background: #ffffff;
+}
+.qa__header{
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #f8f8f8;
+}
+.qa__title{
+  margin: 0 0 6px;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--gov-black);
+}
+.qa__subtitle{
+  margin: 0;
+  font-size: 14px;
+  color: var(--gov-grey);
+  max-width: 90ch;
+}
+
+.qa__body{ padding: 14px 16px 16px; }
+
+/* Two-column layout (questions + cam) */
+.qa__layout{
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  align-items: start;
+}
+.qa__left{ min-width: 0; }
+
+.qa__meta{
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.qa__metaRow{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.qa__metaRow--secondary{ justify-content: flex-start; }
+
+.qa__liveTitle{
+  font-weight: 900;
+  color: var(--danger);
+  font-size: 16px;
+}
+
+.qa__liveBadge{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding: 4px 10px;
+  border: 1px solid #a32014;
+  background: #fff5f5;
+  color: #a32014;
+  font-weight: 900;
+  letter-spacing: .4px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.qa__liveDot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 0 0 rgba(212,53,28,.55);
+  animation: livePulse 1.2s infinite;
+}
+
+.qa__number{
+  font-weight: 900;
+  color: var(--gov-black);
+  font-size: 14px;
+}
+
+/* Card hidden until recording */
+.qa__card{
+  border: 1px solid #e2e2e2;
+  border-left: 4px solid var(--gov-blue);
+  padding: 12px 12px;
+  background: #ffffff;
+  margin-bottom: 14px;
+}
+.qa__card--hidden{ display:none; }
+
+.qa__q{ font-weight: 800; margin-bottom: 6px; }
+.qa__hint{ color: var(--gov-grey); font-size: 14px; }
+
+/* Controls */
+.qa__controls{
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+.qa-btn{
+  appearance: none;
+  border: 2px solid var(--gov-blue-underline);
+  background: var(--gov-blue);
+  color: #ffffff;
+  padding: 11px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.qa-btn:hover{ filter: brightness(0.95); }
+.qa-btn:focus{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.qa-btn:disabled{
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* Progress */
+.qa__progress{
+  height: 10px;
+  background: #e6e6e6;
+  border: 1px solid #d0d0d0;
+}
+.qa__progress-bar{
+  height: 100%;
+  background: var(--gov-blue);
+  width: 0%;
+}
+
+.qa__lockNote{
+  margin: 10px 0 0;
+  color: var(--gov-grey);
+  font-size: 14px;
+}
+
+.qa__footer{
+  padding: 12px 16px;
+  border-top: 1px solid #e6e6e6;
+  background: var(--gov-light);
+  font-size: 14px;
+  color: var(--gov-black);
+}
+
+/* Webcam card */
+.cam{
+  border: 1px solid #e2e2e2;
+  background: #ffffff;
+  padding: 10px 10px 12px;
+}
+.cam__header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 8px;
+}
+.cam__title{
+  font-weight: 900;
+  font-size: 14px;
+}
+.cam__status{
+  font-size: 12px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border: 1px solid #b1b4b6;
+  background: #f3f2f1;
+}
+.cam__status--on{
+  border-color: #a32014;
+  background: #fff5f5;
+  color: #a32014;
+}
+.cam__frame{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #0b0c0c;
+  border: 1px solid #b1b4b6;
+  overflow: hidden;
+}
+#camVideo{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cam__note{
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--gov-grey);
+}
+
+/* Animations */
+@keyframes pulse{
+  0%{ transform: scale(1); }
+  50%{ transform: scale(1.12); }
+  100%{ transform: scale(1); }
+}
+@keyframes ripple{
+  0%{ box-shadow: 0 0 0 0 rgba(212, 53, 28, 0.55); }
+  70%{ box-shadow: 0 0 0 10px rgba(212, 53, 28, 0); }
+  100%{ box-shadow: 0 0 0 0 rgba(212, 53, 28, 0); }
+}
+@keyframes livePulse{
+  0%{ box-shadow: 0 0 0 0 rgba(212,53,28,.55); }
+  70%{ box-shadow: 0 0 0 8px rgba(212,53,28,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(212,53,28,0); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .rec-toggle:not(.rec-toggle--off) .rec-dot,
+  .rec-toggle:not(.rec-toggle--off) .rec-dot::after,
+  .qa__liveDot{
+    animation: none !important;
+  }
+}
+
+/* Mobile tweaks */
+@media (max-width: 860px){
+  .qa__layout{
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px){
+  .app-header__inner{
+    flex-direction: column;
+    align-items:flex-start;
+  }
+  .summary__row{
+    flex-direction: column;
+    gap: 4px;
+  }
+  .summary__key{ min-width: auto; }
+  .qa__metaRow{
+    flex-direction: column;
+    align-items:flex-start;
+  }
+}
