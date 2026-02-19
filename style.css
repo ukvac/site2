@@ -8,6 +8,7 @@
   --gov-light:#f3f2f1;
   --focus:#ffdd00;
   --container: 960px;
+  --danger:#d4351c;
 }
 
 *{ box-sizing:border-box; }
@@ -194,6 +195,11 @@ h1{
   margin: 0 0 16px;
   font-size: 16px;
 }
+.body-text--subtle{
+  margin-top: 16px;     /* space above */
+  font-size: 14px;      /* smaller */
+  color: var(--gov-grey);
+}
 
 /* Links */
 a{
@@ -202,9 +208,7 @@ a{
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
-a:hover{
-  text-decoration-color: var(--gov-blue-underline);
-}
+a:hover{ text-decoration-color: var(--gov-blue-underline); }
 a:focus{
   outline: 3px solid var(--focus);
   outline-offset: 2px;
@@ -259,9 +263,7 @@ a:focus{
   flex-wrap:wrap;
   gap:18px;
 }
-.app-footer__links a{
-  font-size: 14px;
-}
+.app-footer__links a{ font-size: 14px; }
 .app-footer__note{
   margin:0;
   color: var(--gov-grey);
@@ -269,7 +271,7 @@ a:focus{
   max-width: 800px;
 }
 
-/* Recording: notice panel + toggle + timer */
+/* Recording panel */
 .recording-panel{
   max-width: 760px;
   background: var(--gov-light);
@@ -307,7 +309,7 @@ a:focus{
   display:flex;
   align-items:center;
   gap:14px;
-  margin: 0 0 14px;
+  margin: 0 0 16px;     /* extra space below controls */
   flex-wrap: wrap;
 }
 
@@ -334,7 +336,7 @@ a:focus{
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #d4351c;
+  background: var(--danger);
   border: 2px solid #a32014;
   display:flex;
   align-items:center;
@@ -348,7 +350,7 @@ a:focus{
   fill: #ffffff;
 }
 
-/* Pulse animation when recording */
+/* Pulse when recording */
 .rec-toggle:not(.rec-toggle--off) .rec-dot{
   animation: pulse 1.4s infinite;
 }
@@ -361,20 +363,14 @@ a:focus{
   animation: ripple 1.4s infinite;
 }
 
-/* Off state (grey) */
+/* Off state */
 .rec-toggle--off .rec-dot{
   background: #b1b4b6;
   border-color: #8a8c8f;
 }
-.rec-toggle--off .rec-mic{
-  fill: #0b0c0c;
-}
-.rec-toggle--off .rec-dot::after{
-  content:none;
-}
-.rec-toggle--off .rec-dot{
-  animation: none;
-}
+.rec-toggle--off .rec-mic{ fill: #0b0c0c; }
+.rec-toggle--off .rec-dot::after{ content:none; }
+.rec-toggle--off .rec-dot{ animation: none; }
 
 /* Status + timer */
 .rec-status{
@@ -400,7 +396,7 @@ a:focus{
   border: 1px solid var(--gov-border);
   background: #ffffff;
   padding: 12px 14px;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
 }
 .consent__label{
   display:flex;
@@ -425,7 +421,7 @@ a:focus{
   color: var(--gov-grey);
 }
 
-/* LIVE Questions (one-by-one panel) */
+/* LIVE Questions panel */
 .qa{
   max-width: 760px;
   margin: 18px 0 18px;
@@ -451,34 +447,36 @@ a:focus{
   color: var(--gov-grey);
   max-width: 70ch;
 }
+
 .qa__body{
   padding: 14px 16px 16px;
 }
+
 .qa__meta{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+  flex-direction: column;
+  gap: 6px;
   margin-bottom: 10px;
 }
-.qa__count{
-  font-weight: 800;
+
+.qa__liveTitle{
+  font-weight: 900;
+  color: var(--danger);
+  font-size: 16px;
 }
-.qa__live{
-  display:inline-block;
-  background: #d4351c;
-  color: #fff;
-  font-weight: 800;
-  font-size: 12px;
-  padding: 2px 8px;
-  letter-spacing: .6px;
+
+.qa__number{
+  font-weight: 900;
+  color: var(--gov-black);
+  font-size: 14px;
 }
+
 .qa__card{
   border: 1px solid #e2e2e2;
   border-left: 4px solid var(--gov-blue);
   padding: 12px 12px;
   background: #ffffff;
-  margin-bottom: 12px;
+  margin-bottom: 14px; /* space below card */
 }
 .qa__q{
   font-weight: 800;
@@ -489,31 +487,26 @@ a:focus{
   font-size: 14px;
 }
 
+/* Controls: ONLY Next, Blue, spaced */
 .qa__controls{
-  display:flex;
-  gap:10px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-top: 6px;
+  margin-bottom: 14px; /* space above progress */
 }
 
 .qa-btn{
   appearance: none;
-  border: 2px solid var(--gov-black);
-  background: #ffffff;
-  padding: 10px 12px;
-  font-weight: 800;
+  border: 2px solid var(--gov-blue-underline);
+  background: var(--gov-blue);
+  color: #ffffff;
+  padding: 11px 14px;
+  font-weight: 900;
   cursor: pointer;
 }
+.qa-btn:hover{ filter: brightness(0.95); }
 .qa-btn:focus{
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
-.qa-btn--primary{
-  border-color: var(--gov-blue-underline);
-  background: var(--gov-blue);
-  color: #ffffff;
-}
-.qa-btn--disabled,
 .qa-btn:disabled{
   opacity: .55;
   cursor: not-allowed;
@@ -527,7 +520,13 @@ a:focus{
 .qa__progress-bar{
   height: 100%;
   background: var(--gov-blue);
-  width: 10%;
+  width: 0%;
+}
+
+.qa__lockNote{
+  margin: 10px 0 0;
+  color: var(--gov-grey);
+  font-size: 14px;
 }
 
 .qa__footer{
