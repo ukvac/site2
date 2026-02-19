@@ -12,7 +12,7 @@
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
-        <span class="app-header__brand">Compliance Portal</span>
+        <span class="app-header__brand">GOV.UK Compliance Portal</span>
       </div>
       <div class="app-header__center">Supervision Recording</div>
       <div class="app-header__right">Worker- <strong>Archabahen Shaileshbhai Patel</strong></div>
@@ -133,7 +133,7 @@
     </section>
 
     <p class="body-text body-text--subtle">
-      Continue when ready. Access may be restricted depending on user permissions.
+      This recording will be shared with UKVI and the Care Quality Commission CQC.
     </p>
 
     <div class="actions">
@@ -220,7 +220,7 @@
 
       <div class="app-footer__meta">
         <p class="app-footer__note">
-          Internal training/demo interface. Do not present this page as an official government service.
+          All content is available under the Open Government Licence v3.0, except where otherwise stated.
         </p>
       </div>
     </div>
@@ -415,8 +415,10 @@
         { q: "Are you aware of the concept of modern slavery?", hint: "" },
         { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
         { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "" },
-        { q: "How do you get on with your co-workers?", hint: "" },
+        { q: "How do you get on with your co-workers?", hint: "You don't need to take any names" },
         { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
+        { q: "Have you been coached prior to this supervision?", hint: "If yes, explain by whom." },
+        { q: "What do you understand by Safeguarding", hint: "Explain in detail." },
         { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
         { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
@@ -451,7 +453,7 @@
           renderQuestion();
         } else {
           qaNumber.textContent = "Completed";
-          qaQuestion.textContent = "Questions completed. You may proceed when ready.";
+          qaQuestion.textContent = "Questions completed. You may proceed with your company standard supervision during this recorded session.";
           qaHint.textContent = "";
           qaNext.disabled = true;
           qaNext.textContent = "Finished";
