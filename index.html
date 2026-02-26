@@ -397,7 +397,7 @@
       updateSubmitState();
 
       const questions = [
-        { q: "State your name and address.", hint: "Say your full name and address." },
+        { q: "State your full name and address.", hint: "Say your full name and address." },
         { q: "Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
         { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
         { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
@@ -412,12 +412,12 @@
         { q: "Are you being responsible in paying your taxes?", hint: "Answer truthfully." },
         { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
         { q: "How many years experience do you have working in Health Care?", hint: "" },
-        { q: "In your opinion, what is the biggest obstacle you are facing at work right now?", hint: "" },
-        { q: "Are you comfortable working for the sponsored company?", hint: "" },
+        { q: "Are you able to work your given working Hours on a weekly basis?", hint: "" },
+        { q: "Are you being paid for your holiday?", hint: "Yes or No" },
         { q: "What tasks or activities do you feel confident doing in your current role?", hint: "" },
         { q: "Are you aware of the concept of modern slavery?", hint: "exploitation or commercial gain" },
-        { q: "Do you believe you are being exploited by the sponsored company?", hint: "If yes, explain why." },
-        { q: "Do you believe the employer has been treating yourself and other staff members fairly?", hint: "You don't need to take any names of colleagues" },
+        { q: "Are you being given your contracted hours by the sponsored company?", hint: "Yes or No." },
+        { q: "Do you believe the employer has been treating other staff members fairly?", hint: "You don't need to take any names of colleagues" },
         { q: "How do you get on with your co-workers?", hint: "You don't need to take any names" },
         { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
         { q: "Have you been coached prior to this supervision?", hint: "If yes, explain by whom." },
@@ -426,9 +426,16 @@
         { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
         { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
-        { q: "Have you passed a B2 English test?", hint: "If not, state when this will take place." },
+        { q: "What happens if you cannot attend a shift?", hint: "Explain what you would do in this situation." },
         { q: "Have you passed a B1 English test for any previous Home Office applications?", hint: "Yes or No." },
-        { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." }
+        { q: "Do you have any annual leave booked?", hint: "Please state all annual leave taken this year." },
+        { q: "If the company gives you shifts, are you required to attend?", hint: "Yes or No." },
+        { q: "Are you aware that you must work 37.5 Hours per week unless the employer changes your shifts?", hint: "Yes or No." },
+        { q: "If you are unable to work on certain days, do you understand that these days will need to be requested and approved as annual leave?", hint: "Yes or No." },
+        { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." },
+        { q: "Employer Questions: Are you proactively logging staff annual leave on your HR Systems?", hint: "Explain in detail." },
+        { q: "Employer Questions: Have you provided the worker with a proper and officiated Contract of Employment?", hint: "Explain when the contract was signed." },
+        { q: "Employer Questions: Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "" }
       ];
 
       let idx = 0;
