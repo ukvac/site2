@@ -116,13 +116,13 @@
           </button>
 
           <div class="rec-visual rec-visual--hidden" id="recVisual" aria-hidden="true">
-            <div class="rec-visual__bars">
+            <div class="rec-visual__bars" id="recBars">
               <span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span>
+              <span></span>
             </div>
-            <span class="rec-visual__label">Recording</span>
+            <span class="rec-visual__dot"></span>
           </div>
         </div>
 
@@ -254,6 +254,7 @@
       const qaCard = document.getElementById("qaCard");
       const qaLiveBadge = document.getElementById("qaLiveBadge");
       const recVisual = document.getElementById("recVisual");
+      const recBars = Array.from(document.querySelectorAll("#recBars span"));
 
       const camVideo = document.getElementById("camVideo");
       const camStatus = document.getElementById("camStatus");
@@ -261,6 +262,11 @@
       const camDrag = document.getElementById("camDrag");
 
       let camStream = null;
+      let micStream = null;
+      let audioContext = null;
+      let analyser = null;
+      let sourceNode = null;
+      let animationFrameId = null;
       let isRecording = false;
       let hasRecordingStarted = false;
       let startTime = 0;
@@ -311,6 +317,94 @@
         camVideo.srcObject = null;
         camStatus.textContent = "Off";
         camStatus.classList.remove("cam__status--on");
+      }
+
+      async function startAudioMeter() {
+        if (audioContext) return;
+
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true
+            },
+            video: false
+          });
+
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          sourceNode = audioContext.createMediaStreamSource(micStream);
+          analyser = audioContext.createAnalyser();
+          analyser.fftSize = 64;
+          analyser.smoothingTimeConstant = 0.75;
+          sourceNode.connect(analyser);
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+          function updateWaveform() {
+            if (!analyser) return;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            const barsCount = recBars.length;
+            const sliceSize = Math.max(1, Math.floor(dataArray.length / barsCount));
+
+            for (let i = 0; i < barsCount; i++) {
+              let sum = 0;
+              const start = i * sliceSize;
+              const end = Math.min(start + sliceSize, dataArray.length);
+
+              for (let j = start; j < end; j++) {
+                sum += dataArray[j];
+              }
+
+              const avg = end > start ? sum / (end - start) : 0;
+              const normalized = avg / 255;
+              const height = 4 + Math.max(0, normalized * 16);
+              recBars[i].style.height = height + "px";
+              recBars[i].style.opacity = String(0.45 + normalized * 0.55);
+            }
+
+            animationFrameId = requestAnimationFrame(updateWaveform);
+          }
+
+          updateWaveform();
+        } catch (err) {
+          console.error("Audio meter error:", err);
+        }
+      }
+
+      function stopAudioMeter() {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+
+        recBars.forEach((bar, i) => {
+          const baseHeights = [5, 7, 4, 8, 5, 7, 4, 8, 5, 7, 4, 8, 5, 7, 4, 6];
+          bar.style.height = baseHeights[i % baseHeights.length] + "px";
+          bar.style.opacity = "0.35";
+        });
+
+        if (sourceNode) {
+          sourceNode.disconnect();
+          sourceNode = null;
+        }
+
+        if (analyser) {
+          analyser.disconnect();
+          analyser = null;
+        }
+
+        if (audioContext) {
+          audioContext.close();
+          audioContext = null;
+        }
+
+        if (micStream) {
+          micStream.getTracks().forEach(t => t.stop());
+          micStream = null;
+        }
       }
 
       function updateSubmitState() {
@@ -365,7 +459,7 @@
         renderTimer();
       }
 
-      function startRec() {
+      async function startRec() {
         isRecording = true;
         hasRecordingStarted = true;
 
@@ -378,7 +472,7 @@
         startTime = Date.now() - elapsedMs;
         if (!intervalId) intervalId = setInterval(tick, 250);
 
-        startCamera();
+        await Promise.allSettled([startCamera(), startAudioMeter()]);
 
         idx = 0;
         renderQuestion();
@@ -400,6 +494,7 @@
         renderTimer();
 
         stopCamera();
+        stopAudioMeter();
         setQuestionsVisible(false);
         updateSubmitState();
       }
@@ -417,9 +512,6 @@
 
       consentCheck.addEventListener("change", updateSubmitState);
 
-      /* CHOOSE YOUR 5 RED QUESTIONS HERE:
-         Set important: true on exactly the questions you want highlighted.
-      */
       const questions = [
         { q: "Introduction: all members present should introduce themselves.", hint: "State names and job titles.", important: false },
         { q: "Employer: Please introduce the worker.", hint: "State the name of the worker.", important: false },
@@ -582,6 +674,7 @@
 
       window.addEventListener("beforeunload", function () {
         stopCamera();
+        stopAudioMeter();
       });
     })();
   </script>
