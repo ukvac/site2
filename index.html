@@ -120,8 +120,6 @@
               <span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span>
             </div>
             <span class="rec-visual__label">Recording</span>
@@ -419,6 +417,9 @@
 
       consentCheck.addEventListener("change", updateSubmitState);
 
+      /* CHOOSE YOUR 5 RED QUESTIONS HERE:
+         Set important: true on exactly the questions you want highlighted.
+      */
       const questions = [
         { q: "Introduction: all members present should introduce themselves.", hint: "State names and job titles.", important: false },
         { q: "Employer: Please introduce the worker.", hint: "State the name of the worker.", important: false },
