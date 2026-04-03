@@ -466,6 +466,24 @@ a:focus{
 }
 .qa__card--hidden{ display:none; }
 
+/* outward / callout appearance */
+.qa__card--outward{
+  position: relative;
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+  border-left-width: 6px;
+}
+.qa__card--outward::before{
+  content:"";
+  position:absolute;
+  left:-14px;
+  top:18px;
+  width:0;
+  height:0;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-right:10px solid var(--gov-blue);
+}
+
 .qa__q{ font-weight: 800; margin-bottom: 6px; }
 .qa__hint{ color: var(--gov-grey); font-size: 14px; }
 
@@ -517,27 +535,35 @@ a:focus{
   color: var(--gov-black);
 }
 
-/* Floating camera box: sits to the right of the questions card */
+/* Floating camera box */
 .cam-float{
   position: fixed;
   right: 20px;
-  top: 170px;           /* tweak if you want higher/lower */
-  width: 280px;
-  z-index: 50;
+  top: 170px;
+  width: 300px;
+  z-index: 200;
   border: 1px solid #e2e2e2;
   background: #ffffff;
-  padding: 10px 10px 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,.16);
+  border-radius: 6px;
+  overflow: hidden;
 }
-
-/* Camera internals */
-.cam__header{
+.cam-float--dragging{
+  opacity: .95;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+}
+.cam-float__drag{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin-bottom: 8px;
+  padding: 10px 12px;
+  cursor: move;
+  user-select: none;
+  background: #f3f2f1;
+  border-bottom: 1px solid #d8d8d8;
 }
+
 .cam__title{
   font-weight: 900;
   font-size: 14px;
@@ -558,7 +584,7 @@ a:focus{
   width: 100%;
   aspect-ratio: 4 / 3;
   background: #0b0c0c;
-  border: 1px solid #b1b4b6;
+  border-top: 0;
   overflow: hidden;
 }
 #camVideo{
@@ -567,17 +593,18 @@ a:focus{
   object-fit: cover;
 }
 .cam__note{
-  margin: 10px 0 0;
+  margin: 0;
+  padding: 10px 12px 12px;
   font-size: 12px;
   color: var(--gov-grey);
 }
 
-/* Make room for the floating panel on wider screens */
+/* Make room on wide screens */
 @media (min-width: 1200px){
-  .container{ padding-right: 340px; } /* prevents overlap with fixed cam box */
+  .container{ padding-right: 360px; }
 }
 
-/* On smaller screens: disable floating so it doesn't cover content */
+/* On smaller screens */
 @media (max-width: 1199px){
   .cam-float{
     position: static;
@@ -585,6 +612,10 @@ a:focus{
     max-width: 760px;
     margin: 0 auto 18px;
     box-shadow: none;
+    border-radius: 0;
+  }
+  .cam-float__drag{
+    cursor: default;
   }
 }
 
