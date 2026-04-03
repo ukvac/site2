@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Supervision Recording Portal</title>
-
+  <title>Compliance Supervision Portal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -12,17 +11,17 @@
   <header class="app-header" role="banner">
     <div class="container app-header__inner">
       <div class="app-header__left">
-        <span class="app-header__brand">GOV.UK Compliance Portal</span>
+        <span class="app-header__brand">Compliance Portal</span>
       </div>
       <div class="app-header__center">Supervision Recording</div>
-      <div class="app-header__right">Worker- <strong>Archana Shaileshbhai Patel</strong></div>
+      <div class="app-header__right">Worker - <strong>Archana Shaileshbhai Patel</strong></div>
     </div>
   </header>
 
   <main class="container" role="main">
     <div class="phase-banner" aria-label="Service status">
       <strong class="phase-banner__tag">BETA</strong>
-      <span class="phase-banner__text">This is a new service.</span>
+      <span class="phase-banner__text">This is a new internal service.</span>
     </div>
 
     <section class="service-name" aria-label="Service name">
@@ -75,7 +74,6 @@
       </div>
     </div>
 
-    <!-- LIVE Questions (hidden until recording starts) -->
     <section class="qa" aria-label="Live supervision questions">
       <div class="qa__header">
         <h3 class="qa__title">Compliance supervision and welfare questions (live)</h3>
@@ -88,7 +86,7 @@
       <div class="qa__body">
         <div class="qa__meta" aria-live="polite">
           <div class="qa__metaRow">
-            <span class="qa__liveTitle" id="qaLiveTitle">Questions (UKVI Prerequisite LIVE)</span>
+            <span class="qa__liveTitle" id="qaLiveTitle">Questions (Prerequisite LIVE)</span>
 
             <span class="qa__liveBadge" id="qaLiveBadge" aria-label="Live">
               <span class="qa__liveDot" aria-hidden="true"></span>
@@ -101,7 +99,7 @@
           </div>
         </div>
 
-        <div class="qa__card qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
+        <div class="qa__card qa__card--outward qa__card--hidden" id="qaCard" role="group" aria-label="Current question">
           <div class="qa__q" id="qaQuestion"></div>
           <div class="qa__hint" id="qaHint"></div>
         </div>
@@ -133,7 +131,7 @@
     </section>
 
     <p class="body-text body-text--subtle">
-      This recording will be shared with UKVI and the Care Quality Commission CQC.
+      This recording may be reviewed internally for compliance and quality assurance.
     </p>
 
     <div class="actions">
@@ -143,7 +141,7 @@
           <span class="recording-panel__title">Session recording control</span>
         </div>
         <p class="recording-panel__text">
-          Recording does not begin automatically. Select “Start recording” when ready.
+          Recording does not begin automatically. Select “Start recording” when ready. Submission is only enabled after recording has been stopped.
         </p>
       </div>
 
@@ -179,7 +177,7 @@
           </span>
         </label>
         <p class="consent__hint" id="consentHint">
-          You must confirm consent and start recording before you can submit.
+          You must confirm consent, start recording, and then stop recording before you can submit.
         </p>
       </div>
 
@@ -194,10 +192,10 @@
     </ul>
   </main>
 
-  <!-- Floating webcam preview (outside questions card) -->
-  <aside class="cam-float" aria-label="Camera preview">
-    <div class="cam__header">
-      <span class="cam__title">UKVI Camera Feed</span>
+  <!-- Floating movable webcam preview -->
+  <aside class="cam-float" id="camFloat" aria-label="Camera preview">
+    <div class="cam-float__drag" id="camDrag">
+      <span class="cam__title">Camera preview</span>
       <span class="cam__status" id="camStatus">Off</span>
     </div>
 
@@ -205,7 +203,7 @@
       <video id="camVideo" autoplay playsinline muted></video>
     </div>
 
-    <p class="cam__note">Live recording. Camera access requires permission.</p>
+    <p class="cam__note">Local preview only. Camera access requires permission.</p>
   </aside>
 
   <footer class="app-footer" role="contentinfo">
@@ -220,7 +218,7 @@
 
       <div class="app-footer__meta">
         <p class="app-footer__note">
-          All content is available under the Open Government Licence v3.0, except where otherwise stated.
+          Internal training/demo interface.
         </p>
       </div>
     </div>
@@ -247,12 +245,14 @@
       const qaCard = document.getElementById("qaCard");
       const qaLiveBadge = document.getElementById("qaLiveBadge");
 
-      // Webcam
       const camVideo = document.getElementById("camVideo");
       const camStatus = document.getElementById("camStatus");
-      let camStream = null;
+      const camFloat = document.getElementById("camFloat");
+      const camDrag = document.getElementById("camDrag");
 
+      let camStream = null;
       let isRecording = false;
+      let hasRecordingStarted = false;
       let startTime = 0;
       let elapsedMs = 0;
       let intervalId = null;
@@ -298,21 +298,24 @@
       }
 
       function updateSubmitState() {
-        const ok = consentCheck.checked && isRecording;
-        if (ok) {
+        const canSubmit = consentCheck.checked && hasRecordingStarted && !isRecording;
+
+        if (canSubmit) {
           submitBtn.classList.remove("button--disabled");
           submitBtn.setAttribute("aria-disabled", "false");
-          consentHint.textContent = "Consent confirmed and recording started. You can now submit.";
+          consentHint.textContent = "Consent confirmed and recording has been completed. You can now submit.";
         } else {
           submitBtn.classList.add("button--disabled");
           submitBtn.setAttribute("aria-disabled", "true");
 
-          if (!consentCheck.checked && !isRecording) {
-            consentHint.textContent = "You must confirm consent and start recording before you can submit.";
+          if (!consentCheck.checked && !hasRecordingStarted) {
+            consentHint.textContent = "You must confirm consent, start recording, and then stop recording before you can submit.";
           } else if (!consentCheck.checked) {
             consentHint.textContent = "You must confirm consent before you can submit.";
-          } else {
-            consentHint.textContent = "You must start recording before you can submit.";
+          } else if (!hasRecordingStarted) {
+            consentHint.textContent = "You must start and stop recording before you can submit.";
+          } else if (isRecording) {
+            consentHint.textContent = "Stop recording to enable submission.";
           }
         }
       }
@@ -345,6 +348,8 @@
 
       function startRec() {
         isRecording = true;
+        hasRecordingStarted = true;
+
         btn.classList.remove("rec-toggle--off");
         btn.setAttribute("aria-pressed", "true");
         btn.setAttribute("aria-label", "Stop recording");
@@ -359,12 +364,12 @@
         idx = 0;
         renderQuestion();
         setQuestionsVisible(true);
-
         updateSubmitState();
       }
 
       function stopRec() {
         isRecording = false;
+
         btn.classList.add("rec-toggle--off");
         btn.setAttribute("aria-pressed", "false");
         btn.setAttribute("aria-label", "Start recording");
@@ -391,73 +396,68 @@
 
       consentCheck.addEventListener("change", updateSubmitState);
 
-      renderTimer();
-      stopRec();
-      setQuestionsVisible(false);
-      updateSubmitState();
-
       const questions = [
-        { q: "Introduction; all member's present to introduce yourselves.", hint: "State your names and job titles." },
-        { q: "Employer: Please introduce the worker", hint: "State the name of the worker." },
+        { q: "Introduction: all members present should introduce themselves.", hint: "State names and job titles." },
+        { q: "Employer: Please introduce the worker.", hint: "State the name of the worker." },
         { q: "Archana S Patel: Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week." },
         { q: "Do your tasks align with your duty description?", hint: "Explain in your own words." },
-        { q: "When did you arrive in the UK?", hint: "Date of Arrival." },
-        { q: "How did you find this job?", hint: "give details about how you found this job" },
+        { q: "When did you arrive in the UK?", hint: "State date of arrival." },
+        { q: "How did you find this job?", hint: "Give details about how you found this job." },
         { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can." },
         { q: "How do you receive your rota and how do you confirm shifts?", hint: "Mention the method or system used." },
         { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns and locations." },
-        { q: "Do you understand that vague answers in this interview raises suspicions against you?", hint: "Yes or No" },
+        { q: "Do you understand that vague answers in this interview may raise concerns?", hint: "Yes or No." },
         { q: "Are you aware of the restrictions imposed on your working hours?", hint: "" },
         { q: "Are you working anywhere else?", hint: "Answer clearly." },
-        { q: "Do you work in multiple locations?", hint: "Yes or No" },
-        { q: "Did you provide a share code for a UK right-to-work check??", hint: "Yes or No" },
-        { q: "What continuing professional development (CPD) requirements do you need to meet each year??", hint: "" },
-        { q: "Please name the location(s) of your places of allocation", hint: "i.e city or town name of your clients" },
+        { q: "Do you work in multiple locations?", hint: "Yes or No." },
+        { q: "Did you provide a share code for a UK right-to-work check?", hint: "Yes or No." },
+        { q: "What continuing professional development requirements do you need to meet each year?", hint: "" },
+        { q: "Please name the location(s) of your places of allocation.", hint: "For example, city or town names of your clients." },
         { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "" },
-        { q: "What is the current rate at which you are being paid?", hint: "State hourly rate/salary and how often you are paid." },
-        { q: "Do you receive payslips and can you confirm how you are paid?", hint: "E.g., bank transfer; frequency; payslip access." },
-        { q: "Are you being responsible in paying your taxes?, If Any", hint: "Answer truthfully." },
+        { q: "What is the current rate at which you are being paid?", hint: "State hourly rate or salary and how often you are paid." },
+        { q: "Do you receive payslips and can you confirm how you are paid?", hint: "For example, bank transfer, frequency, payslip access." },
+        { q: "Are you being responsible in paying your taxes, if any?", hint: "Answer truthfully." },
         { q: "Are you aware that working cash in hand is considered an illegal activity in the UK?", hint: "" },
-        { q: "If we were to say that we have evidence of you working a cash in hand job, what would you say to this statement?", hint: "" },
-        { q: "How many years experience do you have working in Health Care?", hint: "" },
+        { q: "If we were to say that we have evidence of you working a cash-in-hand job, what would you say to this statement?", hint: "" },
+        { q: "How many years of experience do you have working in healthcare?", hint: "" },
         { q: "How would you escalate a safeguarding concern involving a vulnerable adult?", hint: "" },
         { q: "Are you able to work your given working hours on a weekly basis?", hint: "" },
-        { q: "Are you being paid for your holidays?", hint: "Yes or No" },
+        { q: "Are you being paid for your holidays?", hint: "Yes or No." },
         { q: "Do you assist with medication or mobility support?", hint: "Explain in your own words." },
         { q: "What tasks or activities do you feel confident doing in your current role?", hint: "" },
         { q: "Are you aware that you must inform your employer of any changes in your address, passport renewals and name changes?", hint: "Yes or No." },
-        { q: "Are you aware of the concept of modern slavery?", hint: "exploitation or commercial gain" },
+        { q: "Are you aware of the concept of modern slavery?", hint: "Think of exploitation or commercial gain." },
         { q: "Have you acquired a new passport in the last 90 days?", hint: "Yes or No." },
         { q: "Are you being given your contracted hours by the sponsored company?", hint: "Yes or No." },
-        { q: "You must report all changes to your employer and ask the employer to update their UKVI records?. Do you agree to this?", hint: "Yes or No." },
-        { q: "Do you believe the employer has been treating other staff members fairly?", hint: "You don't need to take any names of colleagues" },
-        { q: "How do you get on with your co-workers?", hint: "You don't need to take any names" },
+        { q: "You must report all changes to your employer and ask the employer to update their records. Do you agree to this?", hint: "Yes or No." },
+        { q: "Do you believe the employer has been treating other staff members fairly?", hint: "No need to name colleagues." },
+        { q: "How do you get on with your co-workers?", hint: "No need to name anyone." },
         { q: "Have you ever had any complaints regarding anybody at your workplace?", hint: "If yes, describe what happened." },
         { q: "Have you been coached prior to this supervision?", hint: "If yes, explain by whom." },
-        { q: "What do you understand by Safeguarding?", hint: "Explain in detail." },
+        { q: "What do you understand by safeguarding?", hint: "Explain in detail." },
         { q: "Why is supervision important?", hint: "Explain in detail." },
         { q: "Describe how you record visit notes and report incidents or safeguarding concerns.", hint: "Give one example of what you would do." },
-        { q: "What training have you completed in the last 3 months?", hint: "E.g., safeguarding, medication, infection control." },
+        { q: "What training have you completed in the last 3 months?", hint: "For example, safeguarding, medication, infection control." },
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice." },
         { q: "What happens if you cannot attend a shift?", hint: "Explain what you would do in this situation." },
         { q: "Have you passed a B2 English test?", hint: "Yes or No." },
-        { q: "Have you sat a B1 English Test in the United Kingdom previously?", hint: "Yes or No." },
+        { q: "Have you sat a B1 English test in the United Kingdom previously?", hint: "Yes or No." },
         { q: "Do you have any annual leave booked?", hint: "Please state all annual leave taken this year." },
         { q: "When the company gives you shifts, are you required to attend?", hint: "Yes or No." },
-        { q: "Are you aware that you must work 40 Hours per week unless the employer changes your shifts?", hint: "Yes or No." },
-        { q: "If you are unable to work on certain days, do you notify the employer in good time for them to arrange for a replacement?", hint: "Yes or No." },
-        { q: "Did you pay for your Certificate of Sponsorship?", hint: "If Yes, Explain in detail." },
+        { q: "Are you aware that you must work 40 hours per week unless the employer changes your shifts?", hint: "Yes or No." },
+        { q: "If you are unable to work on certain days, do you notify the employer in good time for them to arrange a replacement?", hint: "Yes or No." },
+        { q: "Did you pay for your Certificate of Sponsorship?", hint: "If yes, explain in detail." },
         { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs." },
-        { q: "Employer Questions: Are you proactively logging staff annual leave on your HR Systems?", hint: "Explain in detail." },
-        { q: "Employer Questions: Have you provided the worker with a proper and officiated Contract of Employment?", hint: "Explain when the contract was signed." },
-        { q: "Employer Questions: Have you logged all worker related activity on the UKVI SMS Portal?", hint: "If no, Explain why." },
-        { q: "Employer Questions: What is the HR System that you use in your organisation?", hint: "e.g. Bamboo HR or Be-spoke." },
-        { q: "Employer Questions: Are you sure that the worker is not working a cash in hand job?", hint: "If no, Explain why." },
-        { q: "Employer Questions: In the event, the worker is found out working illegally, what actions would you take?", hint: "Explain your actions." },
-        { q: "Employer Questions: Are you providing the worker with 40 hours on a weekly basis?", hint: "If no, Explain why." },
-        { q: "Employer Questions: How long did the compliance checks take before you hired this worker?", hint: "Explain in detail" },
-        { q: "Employer Questions: What level of DBS check is required for each clinical role?", hint: "Explain in detail" },
-        { q: "Employer Questions: Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "" }
+        { q: "Employer questions: Are you proactively logging staff annual leave on your HR systems?", hint: "Explain in detail." },
+        { q: "Employer questions: Have you provided the worker with a proper contract of employment?", hint: "Explain when the contract was signed." },
+        { q: "Employer questions: Have you logged all worker-related activity on your compliance system?", hint: "If no, explain why." },
+        { q: "Employer questions: What HR system do you use in your organisation?", hint: "For example, BambooHR or a bespoke system." },
+        { q: "Employer questions: Are you sure that the worker is not working a cash-in-hand job?", hint: "If no, explain why." },
+        { q: "Employer questions: In the event the worker is found working illegally, what actions would you take?", hint: "Explain your actions." },
+        { q: "Employer questions: Are you providing the worker with 40 hours on a weekly basis?", hint: "If no, explain why." },
+        { q: "Employer questions: How long did the compliance checks take before you hired this worker?", hint: "Explain in detail." },
+        { q: "Employer questions: What level of DBS check is required for each clinical role?", hint: "Explain in detail." },
+        { q: "Employer questions: Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "" }
       ];
 
       let idx = 0;
@@ -495,6 +495,59 @@
           qaProgress.setAttribute("aria-valuenow", "100");
         }
       });
+
+      // draggable floating camera
+      let dragging = false;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
+
+      camDrag.addEventListener("mousedown", function (e) {
+        dragging = true;
+        const rect = camFloat.getBoundingClientRect();
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+        camFloat.classList.add("cam-float--dragging");
+      });
+
+      document.addEventListener("mousemove", function (e) {
+        if (!dragging) return;
+        camFloat.style.left = (e.clientX - dragOffsetX) + "px";
+        camFloat.style.top = (e.clientY - dragOffsetY) + "px";
+        camFloat.style.right = "auto";
+      });
+
+      document.addEventListener("mouseup", function () {
+        dragging = false;
+        camFloat.classList.remove("cam-float--dragging");
+      });
+
+      // touch drag
+      camDrag.addEventListener("touchstart", function (e) {
+        const touch = e.touches[0];
+        const rect = camFloat.getBoundingClientRect();
+        dragging = true;
+        dragOffsetX = touch.clientX - rect.left;
+        dragOffsetY = touch.clientY - rect.top;
+        camFloat.classList.add("cam-float--dragging");
+      }, { passive: true });
+
+      document.addEventListener("touchmove", function (e) {
+        if (!dragging) return;
+        const touch = e.touches[0];
+        camFloat.style.left = (touch.clientX - dragOffsetX) + "px";
+        camFloat.style.top = (touch.clientY - dragOffsetY) + "px";
+        camFloat.style.right = "auto";
+      }, { passive: true });
+
+      document.addEventListener("touchend", function () {
+        dragging = false;
+        camFloat.classList.remove("cam-float--dragging");
+      });
+
+      renderTimer();
+      stopRec();
+      setQuestionsVisible(false);
+      updateSubmitState();
 
       window.addEventListener("beforeunload", stopCamera);
     })();
