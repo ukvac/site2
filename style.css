@@ -489,17 +489,17 @@ a:focus{
 /* Reviewer banner */
 .review-banner{
   margin: 0 0 14px;
-  border: 1px solid #cfe2f6;
-  background: linear-gradient(90deg, #eef6ff 0%, #f7fbff 100%);
+  border: 1px solid #f0c7c1;
+  background: linear-gradient(90deg, #fff5f4 0%, #fffafa 100%);
   border-radius: 4px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
+  display:flex;
+  align-items:center;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
 }
 
 .review-banner--hidden{
-  display: none;
+  display:none;
 }
 
 .review-banner__icon{
@@ -509,14 +509,14 @@ a:focus{
   width: 42px;
   min-width: 42px;
   align-self: stretch;
-  background: rgba(29,112,184,.07);
-  border-right: 1px solid rgba(29,112,184,.12);
+  background: rgba(212,53,28,.06);
+  border-right: 1px solid rgba(212,53,28,.10);
 }
 
-.review-banner__bell{
+.review-banner__shield{
   width: 18px;
   height: 18px;
-  fill: var(--gov-blue);
+  fill: var(--danger);
 }
 
 .review-banner__track{
@@ -530,11 +530,11 @@ a:focus{
 .review-banner__text{
   display: inline-block;
   padding-left: 100%;
-  color: var(--gov-blue-underline);
+  color: var(--danger);
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: .1px;
-  animation: reviewMarquee 14s linear infinite;
+  animation: reviewMarquee 16s linear infinite;
 }
 
 .qa__card{
@@ -600,7 +600,7 @@ a:focus{
   display:flex;
   align-items:center;
   gap:12px;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
 }
 .qa-btn{
   appearance: none;
@@ -612,6 +612,10 @@ a:focus{
   cursor: pointer;
   border-radius: 4px;
   box-shadow: 0 3px 10px rgba(29,112,184,.18);
+  width: 170px;
+  min-width: 170px;
+  text-align: center;
+  flex: 0 0 170px;
 }
 .qa-btn:hover{ filter: brightness(0.96); }
 .qa-btn:focus{
@@ -821,5 +825,6 @@ a:focus{
   }
   .qa__controls{
     align-items:flex-start;
+    flex-wrap: wrap;
   }
 }
