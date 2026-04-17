@@ -84,6 +84,19 @@
       </div>
 
       <div class="qa__body">
+        <div class="review-banner review-banner--hidden" id="reviewBanner" aria-live="polite">
+          <div class="review-banner__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="review-banner__bell">
+              <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-5h-1V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v6H5a1 1 0 0 0 0 2h14a1 1 0 1 0 0-2Z"/>
+            </svg>
+          </div>
+          <div class="review-banner__track">
+            <span class="review-banner__text">
+              A compliance reviewer is now actively viewing this meeting.
+            </span>
+          </div>
+        </div>
+
         <div class="qa__meta" aria-live="polite">
           <div class="qa__metaRow">
             <span class="qa__liveTitle">Questions (Prerequisite LIVE)</span>
@@ -255,6 +268,7 @@
       const qaLiveBadge = document.getElementById("qaLiveBadge");
       const recVisual = document.getElementById("recVisual");
       const recBars = Array.from(document.querySelectorAll("#recBars span"));
+      const reviewBanner = document.getElementById("reviewBanner");
 
       const camVideo = document.getElementById("camVideo");
       const camStatus = document.getElementById("camStatus");
@@ -444,6 +458,7 @@
           qaLiveBadge.style.display = "none";
           recVisual.classList.add("rec-visual--hidden");
           qaCard.classList.remove("qa__card--important");
+          reviewBanner.classList.add("review-banner--hidden");
 
           qaNumber.textContent = "Questions will appear after recording has started.";
           qaQuestion.textContent = "";
@@ -560,16 +575,16 @@
         { q: "Have you sat a B2 English test in the United Kingdom previously?", hint: "If yes, explain in detail.", important: true },
         { q: "Do you confirm your certifications meet the RQF Level 6 UK Standard?", hint: "Yes or No.", important: true },
         { q: "Can you confirm that you hold an RQF Level 6 qualification, including the subject, awarding body, and year it was obtained?.", hint: "Explain your certification.", important: true },
-        { q: "Was this qualification taught and assessed in English? If so, can you confirm that all coursework, exams, and assessments were completed in English?”.", hint: "Explain in detail.", important: true },
-        { q: "Can you briefly describe the key modules or subjects you studied as part of this qualification?”.", hint: "Describe in detail.", important: true },
-        { q: "Can you explain, in your own words, a typical care scenario and how you would document and communicate it to colleagues?”.", hint: "Explain in detail.", important: true },
-        { q: "We have observed some difficulty in communication during your supervision(s). Can you explain how this aligns with holding a Level 6 qualification delivered in English?”.", hint: "Explain in detail.", important: true },
+        { q: "Was this qualification taught and assessed in English? If so, can you confirm that all coursework, exams, and assessments were completed in English?.", hint: "Explain in detail.", important: true },
+        { q: "Can you briefly describe the key modules or subjects you studied as part of this qualification?.", hint: "Describe in detail.", important: true },
+        { q: "Can you explain, in your own words, a typical care scenario and how you would document and communicate it to colleagues?.", hint: "Explain in detail.", important: true },
+        { q: "We have observed some difficulty in communication during your supervision(s). Can you explain how this aligns with holding a Level 6 qualification delivered in English?.", hint: "Explain in detail.", important: true },
         { q: "Can you confirm, without exception, that you have not undertaken any form of work outside this role — including cash-in-hand, informal, or unpaid work — at any time during your employment with us?.", hint: "Explain in detail.", important: true },
         { q: "You previously stated you had ‘other work’ when declining shifts. What exactly did you mean by that?", hint: "Explain in detail.", important: false },
         { q: "Please account for your time on days where you declined shifts due to ‘other commitments’ — specifically what you were doing, where, and for whom", hint: "Explain in detail.", important: true },
-        { q: "If we were to state, that UKVI may have evidence of you working a cash-in-hand job, what would you say this?", hint: "Explain in detail.", important: false },
+        { q: "If we were to state, that compliance may have evidence of you working a cash-in-hand job, what would you say to this?", hint: "Explain in detail.", important: false },
         { q: "We may verify information through multiple sources. Is there anything you wish to clarify or disclose before we proceed further?", hint: "If yes, please clarify.", important: false },
-        { q: "We have received information indicating that you may have undertaken work in the North Finchley, Edware and Wembley areas outside of your sponsored employment. Can you respond to this?", hint: ".", important: false },
+        { q: "We have received information indicating that you may have undertaken work in the North Finchley, Edgware and Wembley areas outside of your sponsored employment. Can you respond to this?", hint: ".", important: false },
         { q: "Have you undertaken any form of work, paid or unpaid, in the North Finchley, Edgware or Wembley areas during your sponsored employment?", hint: "If yes, please clarify.", important: false },
         { q: "On days where you declined shifts or reported being unavailable, were you at any time engaged in work activities in those areas?", hint: "Explain in detail.", important: false },
         { q: "If your answer is no, can you explain your whereabouts and activities in those areas during the relevant periods?", hint: "Explain in detail.", important: false },
@@ -580,9 +595,9 @@
         { q: "Employer questions: What HR system do you use in your organisation?", hint: "For example, BambooHR or a bespoke system.", important: false },
         { q: "Employer questions: What level of DBS check is required for each clinical role?", hint: "Explain in detail.", important: false },
         { q: "Employer Questions: Have you identified any recurring periods where this worker is consistently unavailable for shifts?", hint: "Explain in detail.", important: true },
-        { q: "Employer Questions: What threshold do you apply when determining whether a concern is significant enough to be reported to UKVI, and how is this decision documented?", hint: "Explain in detail.", important: true },
-        { q: "Employer Questions: How do you verify that the information provided by staff regarding their availability and commitments is accurate and consistent over time?", hint: "", important: false }
-        { q: "Employer Questions: How do you assess and respond to repeated refusal of shifts, particularly where there is no clear or consistent explanation?", hint: "", important: false }
+        { q: "Employer Questions: What threshold do you apply when determining whether a concern is significant enough to be reported to compliance, and how is this decision documented?", hint: "Explain in detail.", important: true },
+        { q: "Employer Questions: How do you verify that the information provided by staff regarding their availability and commitments is accurate and consistent over time?", hint: "", important: false },
+        { q: "Employer Questions: How do you assess and respond to repeated refusal of shifts, particularly where there is no clear or consistent explanation?", hint: "", important: false },
         { q: "Employer questions: Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "", important: false }
       ];
 
@@ -617,6 +632,10 @@
         if (idx < questions.length - 1) {
           idx++;
           renderQuestion();
+
+          if (idx >= 1) {
+            reviewBanner.classList.remove("review-banner--hidden");
+          }
         } else {
           qaCard.classList.remove("qa__card--important");
           qaNumber.textContent = "Completed";
