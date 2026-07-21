@@ -14,7 +14,7 @@
         <span class="app-header__brand">Compliance Portal</span>
       </div>
       <div class="app-header__center">Supervision Recording</div>
-      <div class="app-header__right">Worker - <strong>Archanabahen Shaileshbhai Patel</strong></div>
+      <div class="app-header__right">Worker - <strong>Yogi Hardik Patel</strong></div>
     </div>
   </header>
 
@@ -40,14 +40,14 @@
     <div class="summary" role="region" aria-label="Supervision summary">
       <div class="summary__row">
         <div class="summary__key">Worker</div>
-        <div class="summary__value">Archanabahen Shaileshbhai Patel - Skilled Worker</div>
+        <div class="summary__value">Yogi Hardik Patel - Skilled Worker</div>
       </div>
 
       <div class="summary__divider" role="presentation"></div>
 
       <div class="summary__row">
         <div class="summary__key">Session</div>
-        <div class="summary__value">Health &amp; Care Worker Supervision. Target submission date: 15 May 2026.</div>
+        <div class="summary__value">Health &amp; Care Worker Supervision. Target submission date: 31 July 2026.</div>
       </div>
 
       <div class="summary__divider" role="presentation"></div>
@@ -571,25 +571,30 @@
       const questions = [
         { q: "Introduction: All members present should now introduce themselves.", hint: "State names and job titles.", important: false },
         { q: "HR: Please introduce the worker.", hint: "State the name of the worker.", important: false },
-        { q: "Archana Patel: Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week.", important: false },
+        { q: "Yogi Hardik Patel: Confirm your job title and main duties in your own words.", hint: "Include typical tasks you do each week.", important: false },
         { q: "When did you arrive in the UK?", hint: "State date of arrival.", important: false },
         { q: "You have mentioned that you work according to client needs, can you explain by giving examples, how would you would handle a client who has auditory issues, paired with severe disabilities?", hint: "Explain what you would do in this situation.", important: false },
         { q: "How did you find this job?", hint: "Give details about how you found this job.", important: false },
         { q: "Who is your line manager and how often do you receive supervision?", hint: "State the last supervision date if you can.", important: false },
         { q: "How do you receive your rota and how do you confirm shifts?", hint: "Mention the method or system used.", important: false },
         { q: "Do your tasks align with your duty description?", hint: "Explain in your own words.", important: true },
-        { q: "Can you confirm your mobile number is 075 87 824 081?", hint: "Yes or No", important: false },
+        { q: "Can you confirm your mobile number is 07770 030918?", hint: "Yes or No", important: false },
         { q: "Do you have access to your rota on your mobile phone?", hint: "Show us your rota.", important: false },
         { q: "What are your normal working hours and where do you usually work from?", hint: "Include rota patterns and locations.", important: false },
-        { q: "Do you understand that vague answers in this interview may raise concerns?", hint: "Yes or No.", important: false },
-        { q: "Are you aware of the restrictions imposed on your working hours?", hint: "", important: true },
+        { q: "Do you understand that unclear answers in this interview may raise concerns?", hint: "Yes or No.", important: false },
+        { q: "Have you ever accepted payment in cash for any work you have undertaken whilst living in the United Kingdom?.", hint: "If so, please explain the circumstances.?", important: true },
         { q: "Do you work in multiple locations?", hint: "Yes or No.", important: false },
+        { q: "Have you ever provided care or support to individuals outside of your employment with this company, whether they are friends, relatives or private clients, in exchange for payment or gifts?", hint: "Yes or No.", important: false },
         { q: "Did you provide a share code for a UK right-to-work check?", hint: "Yes or No.", important: false },
+        { q: "Has anyone ever approached you and offered you work without asking you to complete employment paperwork or without paying you through payroll?", hint: "Yes or No.", important: false },
+        { q: "Have you informed the company if you have ever considered taking on additional employment, and are you aware of the company's requirement to be informed of any secondary employment?", hint: "Yes or No.", important: false },
+        { q: "If a UKVI Compliance Officer asked you to explain your role and responsibilities, what would you tell them about your employment with this company?", hint: "Explain in detail", important: false },
+        { q: "Is there anything about your employment, working hours, salary, visa conditions or any additional work you may have undertaken that you think the company should be aware of?", hint: "Explain in detail", important: false },
         { q: "What continuing professional development requirements do you need to meet each year?", hint: "", important: false },
         { q: "Please name the location(s) of your places of allocation.", hint: "Full Address of your main place of work.", important: false },
         { q: "Do you have any annual leave booked?", hint: "Please state all annual leave taken this year.", important: false },
         { q: "When the company gives you shifts, are you required to attend?", hint: "Yes or No.", important: false },
-        { q: "Are you aware that you must work upto 40 hours per week unless the employer changes your shifts?", hint: "Yes or No.", important: false },
+        { q: "Are you aware that you must work upto 37.5 hours per week unless the employer changes your shifts?", hint: "Yes or No.", important: false },
         { q: "If you are unable to work on certain days, do you notify the employer in good time for them to arrange a replacement?", hint: "Yes or No.", important: false },
         { q: "Was it made clear to you that working for any other firm will require written consent from the current employer?", hint: "", important: false },
         { q: "Do you receive payslips and can you confirm how you are paid?", hint: "For example, bank transfer, frequency, payslip access.", important: true },
@@ -605,7 +610,7 @@
         { q: "What tasks or activities do you feel confident doing in your current role?", hint: "", important: false },
         { q: "Are you aware that you must inform your employer of any changes in your address, passport renewals and name changes?", hint: "Yes or No.", important: false },
         { q: "Are you aware of the concept of modern slavery?", hint: "Think of exploitation or commercial gain.", important: false },
-        { q: "Have you changed home address in the last 90 days?", hint: "Yes or No.", important: false },
+        { q: "Have you changed home address in the last 120 days?", hint: "Yes or No.", important: false },
         { q: "You must report all changes to your employer and ask the employer to update their records. Do you agree to this?", hint: "Yes or No.", important: false },
         { q: "Do you believe the employer has been treating other staff members fairly?", hint: "No need to name colleagues.", important: true },
         { q: "How do you get on with your co-workers?", hint: "No need to name anyone.", important: false },
@@ -617,20 +622,20 @@
         { q: "If you were unsure about a care task, what steps would you take before proceeding?", hint: "Focus on escalation and safe practice.", important: true },
         { q: "What happens if you cannot attend a shift?", hint: "Explain what you would do in this situation.", important: false },
         { q: "On occasions that you have identified a hazard or a potential safeguarding issue, what was your response and how did you handle it in terms of actions, paperwork whilst conforming to company policies?", hint: "Give examples.", important: false },
-        { q: "Have you sat a B2 English test in the United Kingdom previously?", hint: "If yes, explain in detail.", important: true },
         { q: "Do you confirm your certifications meet the RQF Level 6 UK Standard?", hint: "Yes or No.", important: true },
         { q: "Can you confirm that you hold an RQF Level 6 qualification, including the subject, awarding body, and year it was obtained?.", hint: "Explain your certification.", important: true },
         { q: "Was this qualification taught and assessed in English? If so, can you confirm that all coursework, exams, and assessments were completed in English?.", hint: "Explain in detail.", important: true },
         { q: "Can you briefly describe the key modules or subjects you studied as part of this qualification?.", hint: "Describe in detail.", important: true },
         { q: "Can you explain, in your own words, a typical care scenario and how you would document and communicate it to colleagues?.", hint: "Explain in detail.", important: true },
+        { q: "Can you confirm that all the information you have provided during this meeting is complete, truthful and accurate to the best of your knowledge, understanding that the company is required to maintain accurate records as a UK Skilled Worker sponsor?", hint: "Yes or No.", important: false },
         { q: "Do you have any health, wellbeing, or workload concerns you want to raise today?", hint: "This can include stress or support needs.", important: false },
-        { q: "Please give us a date of when you will be sitting the B2 English Exam?", hint: "The date can be provisional.", important: false },
         { q: "Employer questions: Are you proactively logging staff annual leave on your HR systems?", hint: "Explain in detail.", important: false },
         { q: "HR: How do you reconcile repeated staff unavailability with your duty to provide safe and consistent care to service users?.", hint: "Explain in detail.", important: false },
         { q: "HR: Can you evidence that all right-to-work checks, ongoing monitoring and compliance reviews are being conducted in line with sponsor guidance and best practice?", hint: "Explain in detail.", important: false },
         { q: "Employer questions: Have you provided the worker with a proper contract of employment?", hint: "Explain when the contract was signed.", important: false },
         { q: "Employer questions: Have you logged all worker-related activity on your compliance system?", hint: "If no, explain why.", important: false },
         { q: "Employer questions: What HR system do you use in your organisation?", hint: "For example, BambooHR or a bespoke system.", important: false },
+        { q: "Employer questions: Within your HR system, are you able to generate HR records that is fully compliant?", hint: "Explain in detail.", important: false },
         { q: "Employer questions: What level of DBS check is required for each clinical role?", hint: "Explain in detail.", important: false },
         { q: "HR: Where there are indicators of staff fatigue, what steps do you take to assess whether this may be linked to excessive working hours?", hint: "Explain in detail.", important: false },
         { q: "Employer questions: When concerns are raised about potential breaches of visa conditions, what is your escalation pathway?", hint: "Explain in detail.", important: false },
